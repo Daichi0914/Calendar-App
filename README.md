@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# カレンダーアプリ
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 要件定義
 
-## Available Scripts
+* 解決すべき課題
+  * Go,React,Ruby,Python,PHPのいずれか（または複数）言語を使って「カレンダー」を作成
+  * こんなカレンダーあったら便利じゃないかな？というものを作る
+  * 提出期限 `2020/11/12（木）23時59分`
+* 実装したい機能
+  * ログイン
+  * 予定書き込み
+  * 年・月それぞれの一覧
+  * 通知
+* 最低ライン
+  * ログイン
+  * 予定書き込み
+  * 月表示
+* 機能要件
+  * フロントエンド React
+  * バックエンド Firebase
+  * データベース Firebase
 
-In the project directory, you can run:
+***
 
-### `yarn start`
+## 基本設計
+### 画面設計
+* ログイン画面
+  * サインイン
+  * サインアップ
+  * パスワード再設定
+* メイン画面
+  * カレンダー
+  * 日付表示
+  * 予定開始時刻
+  * 土日祝の色分け
+  * 本日の印
+  * 先月・来月への移動ボタン
+  * 年単位表示・月単位表示切り替えボタン
+  * マイページへのリンク
+* 予定入力画面
+  * 日付をクリックでモーダル表示
+  * タイトル
+  * 開始日時 - 終了日時
+  * 通知の有無
+  * 通知の設定
+  * 予定参加者
+  * メモ・URLなど
+* マイページ
+  * メールアドレス変更
+  * パスワード再設定
+  * （ユーザー名）
+  * （ユーザーアイコン）
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 機能設計
+* ログイン機能
+  * FirebaseAuth
+* 予定データの管理
+  * FirebaseFirestore
+* UIコンポーネント
+  * Material UI または Semantic UI
+* 通知(できれば)
+  * FCMで[プッシュ通知](https://qiita.com/sadnessOjisan/items/05bbca78bca3301d24b2)
