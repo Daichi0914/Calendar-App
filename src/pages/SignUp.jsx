@@ -1,18 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../AUTH/AuthService';
 import { Link, Redirect, withRouter } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
+import {
+  makeStyles,
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Typography,
+  TextField,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  FormControl,
+} from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import clsx from 'clsx';
@@ -55,9 +57,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SignUp = (props) => {
+const SignUp = props => {
   const [email, setEmail] = useState('');
   const [passValues, setPassValues] = useState({
+    password: '',
+    showPassword: false,
+  });
+  const [againPassValues, setAgainPassValues] = useState({
     password: '',
     showPassword: false,
   });
@@ -68,16 +74,23 @@ const SignUp = (props) => {
   const handleChange = prop => event => {
     setPassValues({ ...passValues, [prop]: event.target.value });
   };
-
+  const handleAgainChange = prop => event => {
+    setAgainPassValues({ ...againPassValues, [prop]: event.target.value });
+  };
   const handleClickShowPassword = () => {
     setPassValues({ ...passValues, showPassword: !passValues.showPassword });
   };
-
+  const handleClickShowAgainPassword = () => {
+    setAgainPassValues({
+      ...againPassValues,
+      showPassword: !againPassValues.showPassword,
+    });
+  };
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     firebase
       .auth()
@@ -86,7 +99,7 @@ const SignUp = (props) => {
         window.alert('登録が完了しました。');
         props.history.push('/SignIn');
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
         if (user.email === email) {
           window.alert('このメールアドレスは既に登録されています。');
@@ -154,21 +167,23 @@ const SignUp = (props) => {
             className={clsx(classes.margin, classes.textField)}
             variant='outlined'
           >
-            <InputLabel htmlFor='outlined-adornment-password'>パスワード再確認</InputLabel>
+            <InputLabel htmlFor='outlined-adornment-password'>
+              パスワード再確認
+            </InputLabel>
             <OutlinedInput
               id='outlined-adornment-password'
-              type={passValues.showPassword ? 'text' : 'password'}
-              value={passValues.password}
-              onChange={handleChange('password')}
+              type={againPassValues.showPassword ? 'text' : 'password'}
+              value={againPassValues.password}
+              onChange={handleAgainChange('password')}
               endAdornment={
                 <InputAdornment position='end'>
                   <IconButton
                     aria-label='toggle password visibility'
-                    onClick={handleClickShowPassword}
+                    onClick={handleClickShowAgainPassword}
                     onMouseDown={handleMouseDownPassword}
                     edge='end'
                   >
-                    {passValues.showPassword ? <Visibility /> : <VisibilityOff />}
+                    {againPassValues.showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               }

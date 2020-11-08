@@ -1,31 +1,33 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../AUTH/AuthService';
 import { Link, Redirect, withRouter } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
+import {
+  makeStyles,
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Typography,
+  TextField,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  FormControl,
+} from '@material-ui/core';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import clsx from 'clsx';
 
 import firebase from '../Config/firebase';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     minWidth: 275,
     maxWidth: 400,
     padding: 20,
     margin: '0 auto',
-    marginTop: '25vh'
+    marginTop: '25vh',
   },
   content: {
     margin: '0 auto',
