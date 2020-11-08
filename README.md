@@ -57,6 +57,6 @@
 * 予定データの管理
   * FirebaseFirestore
 * UIコンポーネント
-  * Material UI または Semantic UI
+  * Material UI (または Semantic UI)
 * 通知(できれば)
   * FCMで[プッシュ通知](https://qiita.com/sadnessOjisan/items/05bbca78bca3301d24b2)
