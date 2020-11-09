@@ -66,10 +66,7 @@ const SubHeader = () => {
   };
 
   const handleToday = () => {
-    return (
-      setCurrentYear(nowYear),
-      setCurrentMonth(nowMonth)
-    );
+    return setCurrentYear(nowYear), setCurrentMonth(nowMonth);
   };
 
   const handleIncrease = () => {
@@ -84,9 +81,13 @@ const SubHeader = () => {
   return (
     <div className={classes.root}>
       <div className={classes.subHeader}>
-        <h2>
-          {currentYear}年 {currentMonth + 1}月
-        </h2>
+        {currentUnit === 'month' ? (
+          <h2>
+            {currentYear}年 {currentMonth + 1}月
+          </h2>
+        ) : (
+          <span></span>
+        )}
         <ButtonGroup size='middle' style={{ backgroundColor: '#eee' }}>
           <Button onClick={handleDecrease}>＜</Button>
           <Button onClick={handleToday}>今日</Button>
