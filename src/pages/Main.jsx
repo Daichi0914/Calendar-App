@@ -15,13 +15,16 @@ import YearCalendar from '../Components/YearCalendar';
 import { Unit } from '../Recoil/UnitDisplay';
 
 const useStyles = makeStyles(theme => ({
-  toolbar: theme.mixins.toolbar
-}))
+  toolbar: theme.mixins.toolbar,
+  monthHeader: {
+    height: 23,
+  },
+}));
 
 const Main = () => {
   const classes = useStyles();
   const user = useContext(AuthContext);
-  const currentUnit = useRecoilValue(Unit)
+  const currentUnit = useRecoilValue(Unit);
 
   const currentUnitDisplay = () => {
     switch (currentUnit) {
@@ -32,9 +35,9 @@ const Main = () => {
       case 'year':
         return <YearCalendar />;
       default:
-        return <MonthCalendar />
+        return <MonthCalendar />;
     }
-  }
+  };
 
   if (!user) {
     return <Redirect to='/SignIn' />;
@@ -46,6 +49,7 @@ const Main = () => {
       <div className={classes.toolbar} />
       <SubHeader style={{ position: 'fixed' }} />
       <div className={classes.toolbar} />
+      {currentUnit === 'month' ? <div className={classes.monthHeader} /> : null}
       {currentUnitDisplay()}
     </div>
   );

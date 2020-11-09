@@ -8,7 +8,6 @@ import Main from './pages/Main';
 
 import { AuthProvider } from './AUTH/AuthService';
 
-
 const App = () => {
   return (
     <RecoilRoot>
