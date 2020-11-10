@@ -31,12 +31,10 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
     },
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(2),
       display: 'block',
     },
   },
@@ -110,7 +108,6 @@ const Header = () => {
         <Toolbar>
           <IconButton
             edge='start'
-            className={classes.menuButton}
             color='inherit'
             aria-label='open drawer'
           >
