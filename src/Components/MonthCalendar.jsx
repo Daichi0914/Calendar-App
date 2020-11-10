@@ -1,15 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import {
-  makeStyles,
-  Typography,
-  Card,
-  Grid,
-  GridList,
-  GridListTile,
-  CardContent,
-  Paper,
-} from '@material-ui/core';
 import {
   NowYear,
   NowMonth,
@@ -19,9 +9,11 @@ import {
   CurrentMonth,
 } from '../Recoil/DateData';
 import MonthCalendarGrid from '../Components/Atoms/MonthCalendarGrid';
+import { AnchorEl, PopperToggle } from '../Recoil/PopperToggleState';
 
-const normalHeaderHeight = '64px';
-const spHeaderHeight = '56px';
+import { makeStyles, GridList, GridListTile, ClickAwayListener } from '@material-ui/core';
+
+import MonthPopper from './Atoms/MonthPopper';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,35 +24,24 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.paper,
   },
   gridList: {
-    width: '100vw',
-    height: `calc(100vh - ${normalHeaderHeight} - 86px)`,
+    height: `calc(100vh - 150px)`,
   },
-  paper: {
-    border: 'solid 1px black',
-    width: `${100 / 7}vw`,
+  gridTile: {
+    borderBottom: 'solid 1px #ddd',
+    borderRight: 'solid 1px #ddd',
+    transition: '.3s',
+    '&:hover': { backgroundColor: '#eee' },
+    cursor: 'pointer',
   },
-  dayNum: {
-    width: 35,
-    height: 35,
-    margin: '5px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  todayNum: {
-    width: 35,
-    height: 35,
-    margin: '5px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: '100px',
-    backgroundColor: 'orange',
+  openGridTile: {
+    borderBottom: 'solid 1px #ddd',
+    borderRight: 'solid 1px #ddd',
   },
 }));
 
 const MonthCalendar = () => {
   const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useRecoilState(AnchorEl);
   const [nowYear, setNowYear] = useRecoilState(NowYear);
   const [nowMonth, setNowMonth] = useRecoilState(NowMonth);
   const [today, setToday] = useRecoilState(Today);
@@ -68,6 +49,7 @@ const MonthCalendar = () => {
 
   const [currentYear, setCurrentYear] = useRecoilState(CurrentYear);
   const [currentMonth, setCurrentMonth] = useRecoilState(CurrentMonth);
+  const [open, setOpen] = useRecoilState(PopperToggle);
 
   useEffect(() => {
     const todayData = new Date();
@@ -79,6 +61,12 @@ const MonthCalendar = () => {
     setCurrentMonth(nowMonth);
   }, [today]);
 
+  const popperId = open ? 'simple-popper' : undefined;
+  const handleClickCalendar = e => {
+    setAnchorEl(e.currentTarget);
+    setOpen(true);
+  };
+
   // 先月の日数
   const beforeMonth = new Date(currentYear, currentMonth, 0);
   const beforeMonthLength = beforeMonth.getDate();
@@ -86,15 +74,13 @@ const MonthCalendar = () => {
   const thisMonth = new Date(currentYear, currentMonth + 1, 0);
   const thisMonthLength = thisMonth.getDate();
   // 来月の日数
-  const afterMonth = new Date(currentYear, currentMonth + 2, 0);
-  const afterMonthLength = afterMonth.getDate();
+  // const afterMonth = new Date(currentYear, currentMonth + 2, 0);
+  // const afterMonthLength = afterMonth.getDate();
 
   const calendar = [];
 
   const currentFirstData = new Date(currentYear, currentMonth, 1);
-  console.log(currentFirstData);
   const currentFirstDay = currentFirstData.getDay(); // 0~6 日~土
-  console.log(currentFirstDay);
 
   Array.apply(null, { length: beforeMonthLength })
     .map(Number.call, Number)
@@ -102,9 +88,16 @@ const MonthCalendar = () => {
       const beforeMonthDay = new Date(currentYear, currentMonth - 1, 1 + i);
       calendar.push(
         <GridListTile
-          style={{ borderBottom: 'solid 1px #ddd', borderRight: 'solid 1px #ddd' }}
+          className={!open ? classes.gridTile : classes.openGridTile}
+          key={`${beforeMonthDay.getFullYear()}/${
+            beforeMonthDay.getMonth() + 1
+          }/${beforeMonthDay.getDate()}`}
+          variant='contained'
+          aria-describedby={popperId}
+          onClick={open ? null : handleClickCalendar}
         >
           <MonthCalendarGrid day={beforeMonthDay} propsStyle={'#aaa'} />
+          <MonthPopper popperId={popperId} anchorEl={anchorEl} />
         </GridListTile>
       );
     });
@@ -133,17 +126,20 @@ const MonthCalendar = () => {
       break;
   }
 
-  console.log(calendar);
-
   Array.apply(null, { length: thisMonthLength })
     .map(Number.call, Number)
     .forEach(i => {
       const day = new Date(currentYear, currentMonth, 1 + i);
       calendar.push(
         <GridListTile
-          style={{ borderBottom: 'solid 1px #ddd', borderRight: 'solid 1px #ddd' }}
+          className={!open ? classes.gridTile : classes.openGridTile}
+          key={`${day.getFullYear()}/${day.getMonth() + 1}/${day.getDate()}`}
+          variant='contained'
+          aria-describedby={popperId}
+          onClick={open ? null : handleClickCalendar}
         >
           <MonthCalendarGrid day={day} />
+          <MonthPopper popperId={popperId} anchorEl={anchorEl} />
         </GridListTile>
       );
     });
@@ -154,23 +150,34 @@ const MonthCalendar = () => {
       const afterMonthDay = new Date(currentYear, currentMonth + 1, 1 + i);
       calendar.push(
         <GridListTile
-          style={{ borderBottom: 'solid 1px #ddd', borderRight: 'solid 1px #ddd' }}
+          className={!open ? classes.gridTile : classes.openGridTile}
+          key={`${afterMonthDay.getFullYear()}/${
+            afterMonthDay.getMonth() + 1
+          }/${afterMonthDay.getDate()}`}
+          variant='contained'
+          aria-describedby={popperId}
+          onClick={open ? null : handleClickCalendar}
         >
           <MonthCalendarGrid day={afterMonthDay} propsStyle={'#aaa'} />
+          <MonthPopper popperId={popperId} anchorEl={anchorEl} />
         </GridListTile>
       );
     });
 
+  const handleClickAway = () => (open ? setOpen(false) : null);
+
   return (
-    <div className={classes.root}>
-      <GridList
-        cellHeight={`calc( (100vh - ${normalHeaderHeight} - 86px) / 6)`}
-        className={classes.gridList}
-        cols={7}
-      >
-        {calendar}
-      </GridList>
-    </div>
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <div className={classes.root}>
+        <GridList
+          cellHeight={'auto'}
+          className={classes.gridList}
+          cols={7}
+        >
+          {calendar}
+        </GridList>
+      </div>
+    </ClickAwayListener>
   );
 };
 

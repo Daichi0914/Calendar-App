@@ -3,13 +3,13 @@ import { withRouter } from 'react-router-dom';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { Unit } from '../Recoil/UnitDisplay';
 import { NowYear, NowMonth, CurrentYear, CurrentMonth } from '../Recoil/DateData';
+import { PopperToggle } from '../Recoil/PopperToggleState';
 
 import {
   makeStyles,
   Button,
   ButtonGroup,
   GridList,
-  Paper,
   Typography,
   Grid,
 } from '@material-ui/core';
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
   monthHeader: {
     backgroundColor: '#fff',
     width: '100%',
-    height: 25,
+    height: 29,
     margin: 0,
     display: 'flex',
     justifyContent: 'space-around',
@@ -55,26 +55,39 @@ const SubHeader = () => {
   const [currentMonth, setCurrentMonth] = useRecoilState(CurrentMonth);
   const nowYear = useRecoilValue(NowYear);
   const nowMonth = useRecoilValue(NowMonth);
+  const [open, setOpen] = useRecoilState(PopperToggle);
 
   const handleDecrease = () => {
     switch (currentMonth) {
       case 0:
-        return setCurrentMonth(currentMonth + 11), setCurrentYear(currentYear - 1);
+        return open
+          ? (setOpen(false),
+            setCurrentMonth(currentMonth + 11),
+            setCurrentYear(currentYear - 1))
+          : (setCurrentMonth(currentMonth + 11), setCurrentYear(currentYear - 1));
       default:
         return setCurrentMonth(currentMonth - 1);
     }
   };
 
   const handleToday = () => {
-    return setCurrentYear(nowYear), setCurrentMonth(nowMonth);
+    return open
+      ? (setOpen(false), setCurrentYear(nowYear), setCurrentMonth(nowMonth))
+      : (setCurrentYear(nowYear), setCurrentMonth(nowMonth));
   };
 
   const handleIncrease = () => {
     switch (currentMonth) {
       case 11:
-        return setCurrentMonth(currentMonth - 11), setCurrentYear(currentYear + 1);
+        return open
+          ? (setOpen(false),
+            setCurrentMonth(currentMonth - 11),
+            setCurrentYear(currentYear + 1))
+          : (setCurrentMonth(currentMonth - 11), setCurrentYear(currentYear + 1));
       default:
-        return setCurrentMonth(currentMonth + 1);
+        return open
+          ? (setOpen(false), setCurrentMonth(currentMonth + 1))
+          : setCurrentMonth(currentMonth + 1);
     }
   };
 
@@ -88,7 +101,7 @@ const SubHeader = () => {
         ) : (
           <span></span>
         )}
-        <ButtonGroup size='middle' style={{ backgroundColor: '#eee' }}>
+        <ButtonGroup size='medium' style={{ backgroundColor: '#eee' }}>
           <Button onClick={handleDecrease}>＜</Button>
           <Button onClick={handleToday}>今日</Button>
           <Button onClick={handleIncrease}>＞</Button>
@@ -96,7 +109,7 @@ const SubHeader = () => {
       </div>
       {currentUnit === 'month' ? (
         <div className={classes.monthHeader}>
-          {weekdays.map(w => {
+          {weekdays.map((w, i) => {
             const styles = {};
             if (w === '日') {
               styles.color = 'red';
@@ -105,7 +118,7 @@ const SubHeader = () => {
               styles.color = 'blue';
             }
             return (
-              <GridList cols={7}>
+              <GridList key={i} cols={7} cellHeight={25}>
                 <Grid>
                   <Typography style={styles}>{w}</Typography>
                 </Grid>

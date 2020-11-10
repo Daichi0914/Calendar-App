@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
 import {
   makeStyles,
@@ -14,8 +15,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import UnitChangeButton from './Atoms/UnitChangeButton';
-import firebase from '../Config/firebase';
+import { PopperToggle } from '../Recoil/PopperToggleState';
 
+import firebase from '../Config/firebase';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -60,6 +62,7 @@ const useStyles = makeStyles(theme => ({
 const Header = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useRecoilState(PopperToggle);
 
   const signOutButton = () => {
     firebase
@@ -76,11 +79,13 @@ const Header = () => {
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = event => {
-    setAnchorEl(event.currentTarget);
+    return open
+      ? (setOpen(false), setAnchorEl(event.currentTarget))
+      : setAnchorEl(event.currentTarget);
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    return open ? (setOpen(false), setAnchorEl(null)) : setAnchorEl(null);
   };
 
   const menuId = 'primary-search-account-menu';

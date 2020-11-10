@@ -3,8 +3,6 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { AuthContext } from '../AUTH/AuthService';
 
-import { makeStyles } from '@material-ui/core/styles';
-
 import Header from '../Components/Header';
 import SubHeader from '../Components/SubHeader';
 import DayCalendar from '../Components/DayCalendar';
@@ -14,15 +12,7 @@ import YearCalendar from '../Components/YearCalendar';
 
 import { Unit } from '../Recoil/UnitDisplay';
 
-const useStyles = makeStyles(theme => ({
-  toolbar: theme.mixins.toolbar,
-  monthHeader: {
-    height: 23,
-  },
-}));
-
 const Main = () => {
-  const classes = useStyles();
   const user = useContext(AuthContext);
   const currentUnit = useRecoilValue(Unit);
 
@@ -46,10 +36,10 @@ const Main = () => {
   return (
     <div>
       <Header />
-      <div className={classes.toolbar} />
+      <div style={{ height: 64 }} />
       <SubHeader style={{ position: 'fixed' }} />
-      <div className={classes.toolbar} />
-      {currentUnit === 'month' ? <div className={classes.monthHeader} /> : null}
+      <div style={{ height: 60 }} />
+      {currentUnit === 'month' ? <div style={{ height: 30 }} /> : null}
       {currentUnitDisplay()}
     </div>
   );

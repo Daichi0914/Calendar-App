@@ -1,63 +1,72 @@
 import React from 'react';
 import { useRecoilState } from 'recoil';
 
-import { Unit } from '../../Recoil/UnitDisplay';
-
 import { makeStyles, Button, ButtonGroup } from '@material-ui/core';
 
-const useStyles = makeStyles({
+import { Unit } from '../../Recoil/UnitDisplay';
+import { PopperToggle } from '../../Recoil/PopperToggleState';
+
+const useStyles = makeStyles(theme => ({
   current: {
     backgroundColor: '#bbb',
+    display: 'flex',
   },
-});
+  span: {
+    width: 7,
+    [theme.breakpoints.up('sm')]: {
+      width: 15,
+    },
+  },
+}));
 
 const UnitChangeButton = () => {
   const classes = useStyles();
   const [currentUnit, setCurrentUnit] = useRecoilState(Unit);
+  const [open, setOpen] = useRecoilState(PopperToggle);
 
   const handleDayClick = () => {
-    setCurrentUnit('day');
+    return open ? (setOpen(false), setCurrentUnit('day')) : setCurrentUnit('day');
   };
   const handleWeekClick = () => {
-    setCurrentUnit('week');
+    return open ? (setOpen(false), setCurrentUnit('week')) : setCurrentUnit('week');
   };
   const handleMonthClick = () => {
-    setCurrentUnit('month');
+    return open ? (setOpen(false), setCurrentUnit('month')) : setCurrentUnit('month');
   };
   const handleYearClick = () => {
-    setCurrentUnit('year');
+    return open ? (setOpen(false), setCurrentUnit('year')) : setCurrentUnit('year');
   };
 
   return (
     <ButtonGroup
-      size='middle'
+      size='medium'
       color='primary'
       aria-label='large outlined primary button group'
-      style={{ backgroundColor: '#eee' }}
+      style={{ backgroundColor: '#eee', margin: '14px 0' }}
     >
       <Button
         className={currentUnit === 'day' ? classes.current : null}
         onClick={handleDayClick}
       >
-        　日　
+        <span className={classes.span} />日<span className={classes.span} />
       </Button>
       <Button
         className={currentUnit === 'week' ? classes.current : null}
         onClick={handleWeekClick}
       >
-        　週　
+        <span className={classes.span} />週<span className={classes.span} />
       </Button>
       <Button
         className={currentUnit === 'month' ? classes.current : null}
         onClick={handleMonthClick}
       >
-        　月　
+        <span className={classes.span} />月<span className={classes.span} />
       </Button>
       <Button
         className={currentUnit === 'year' ? classes.current : null}
         onClick={handleYearClick}
       >
-        　年　
+        <span className={classes.span} />年<span className={classes.span} />
       </Button>
     </ButtonGroup>
   );
