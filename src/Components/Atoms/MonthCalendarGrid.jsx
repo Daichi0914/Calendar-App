@@ -49,7 +49,7 @@ const MonthCalendarGrid = ({ day, propsStyle }) => {
     sixDaysLaterW,
   } = useRecoilValue(DailyWeatherData);
 
-  console.log(todayW);
+  // console.log(todayW);
 
   const color = () => {
     switch (day.getDay()) {
@@ -69,24 +69,19 @@ const MonthCalendarGrid = ({ day, propsStyle }) => {
 
   const test = nowYear === day.getFullYear() && nowMonth === day.getMonth();
 
-  console.log(day)
-  console.log(day.getDate());
-  console.log(day.getDate() - 1);
-  console.log(test && today === day.getDate() - 1);
-
   const WeatherImg = () => {
     if (
       (test && today === day.getDate()) ||
-      (test && today === day.getDate() - 1) ||
-      (test && today === day.getDate() - 2) ||
-      (test && today === day.getDate() - 3) ||
-      (test && today === day.getDate() - 4) ||
-      (test && today === day.getDate() - 5) ||
-      (test && today === day.getDate() - 6)
+      (test && today + 1 === day.getDate()) ||
+      (test && today + 2 === day.getDate()) ||
+      (test && today + 3 === day.getDate()) ||
+      (test && today + 4 === day.getDate()) ||
+      (test && today + 5 === day.getDate()) ||
+      (test && today + 6 === day.getDate())
     ) {
       return <div className={classes.weatherImg} />;
     } else {
-      return
+      return;
     }
   };
 

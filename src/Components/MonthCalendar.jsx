@@ -208,7 +208,10 @@ const MonthCalendar = () => {
         </GridListTile>
       );
     });
+
   const handleClickAway = () => (open ? setOpen(false) : null);
+
+  console.log(calendar[0])
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
