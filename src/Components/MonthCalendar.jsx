@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   NowYear,
@@ -9,11 +9,15 @@ import {
   CurrentMonth,
 } from '../Recoil/DateData';
 import MonthCalendarGrid from '../Components/Atoms/MonthCalendarGrid';
+import MonthPopper from './Atoms/MonthPopper';
+
 import { AnchorEl, PopperToggle } from '../Recoil/PopperToggleState';
+import {OneWeekWeatherData} from '../Recoil/OneWeekWeatherData';
 
 import { makeStyles, GridList, GridListTile, ClickAwayListener } from '@material-ui/core';
 
-import MonthPopper from './Atoms/MonthPopper';
+import OpenWeatherAPI from '../API/OpenWeatherAPI';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,6 +55,10 @@ const MonthCalendar = () => {
   const [currentMonth, setCurrentMonth] = useRecoilState(CurrentMonth);
   const [open, setOpen] = useRecoilState(PopperToggle);
 
+  const [currentDay, setCurrentDay] = useState('');
+
+  const [oneWeekWeatherData, setOneWeekWeatherData] = useRecoilState(OneWeekWeatherData);
+
   useEffect(() => {
     const todayData = new Date();
     setNowYear(todayData.getFullYear());
@@ -59,11 +67,24 @@ const MonthCalendar = () => {
     setDayOfWeek(todayData.getDay());
     setCurrentYear(nowYear);
     setCurrentMonth(nowMonth);
+    const weatherApi = async () => {
+      try {
+        const weatherItems = await OpenWeatherAPI.OpenWeather();
+        const oneWeekWeather = weatherItems.data.daily.map(i => i)
+        setOneWeekWeatherData(oneWeekWeather)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    weatherApi();
   }, [today]);
+
+  console.log(oneWeekWeatherData)
 
   const popperId = open ? 'simple-popper' : undefined;
   const handleClickCalendar = e => {
     setAnchorEl(e.currentTarget);
+    setCurrentDay(e.currentTarget.id);
     setOpen(true);
   };
 
@@ -86,18 +107,31 @@ const MonthCalendar = () => {
     .map(Number.call, Number)
     .forEach(i => {
       const beforeMonthDay = new Date(currentYear, currentMonth - 1, 1 + i);
+      const beforeMonthDayId = `${beforeMonthDay.getFullYear()}-${
+        beforeMonthDay.getMonth() + 1 < 10 ? '0' : ''
+      }${beforeMonthDay.getMonth() + 1}-${
+        beforeMonthDay.getDate() < 10 ? '0' : ''
+      }${beforeMonthDay.getDate()}`;
       calendar.push(
         <GridListTile
+          id={beforeMonthDayId}
           className={!open ? classes.gridTile : classes.openGridTile}
-          key={`${beforeMonthDay.getFullYear()}/${
-            beforeMonthDay.getMonth() + 1
-          }/${beforeMonthDay.getDate()}`}
+          key={beforeMonthDayId}
           variant='contained'
           aria-describedby={popperId}
           onClick={open ? null : handleClickCalendar}
         >
-          <MonthCalendarGrid day={beforeMonthDay} propsStyle={'#aaa'} />
-          <MonthPopper popperId={popperId} anchorEl={anchorEl} />
+          <MonthCalendarGrid
+            id={beforeMonthDayId}
+            day={beforeMonthDay}
+            propsStyle={'#aaa'}
+          />
+          <MonthPopper
+            popperId={popperId}
+            anchorEl={anchorEl}
+            id={beforeMonthDayId}
+            key={beforeMonthDayId}
+          />
         </GridListTile>
       );
     });
@@ -130,16 +164,20 @@ const MonthCalendar = () => {
     .map(Number.call, Number)
     .forEach(i => {
       const day = new Date(currentYear, currentMonth, 1 + i);
+      const dayId = `${day.getFullYear()}-${day.getMonth() + 1 < 10 ? '0' : ''}${
+        day.getMonth() + 1
+      }-${day.getDate() < 10 ? '0' : ''}${day.getDate()}`;
       calendar.push(
         <GridListTile
           className={!open ? classes.gridTile : classes.openGridTile}
-          key={`${day.getFullYear()}/${day.getMonth() + 1}/${day.getDate()}`}
+          id={dayId}
+          key={dayId}
           variant='contained'
           aria-describedby={popperId}
           onClick={open ? null : handleClickCalendar}
         >
-          <MonthCalendarGrid day={day} />
-          <MonthPopper popperId={popperId} anchorEl={anchorEl} />
+          <MonthCalendarGrid id={dayId} day={day} />
+          {/* <MonthPopper popperId={popperId} anchorEl={anchorEl} id={dayId} key={day} /> */}
         </GridListTile>
       );
     });
@@ -148,33 +186,36 @@ const MonthCalendar = () => {
     .map(Number.call, Number)
     .forEach(i => {
       const afterMonthDay = new Date(currentYear, currentMonth + 1, 1 + i);
+      const afterMonthDayId = `${afterMonthDay.getFullYear()}-${
+        afterMonthDay.getMonth() + 1 < 10 ? '0' : ''
+      }${afterMonthDay.getMonth() + 1}-${
+        afterMonthDay.getDate() < 10 ? '0' : ''
+      }${afterMonthDay.getDate()}`;
       calendar.push(
         <GridListTile
           className={!open ? classes.gridTile : classes.openGridTile}
-          key={`${afterMonthDay.getFullYear()}/${
-            afterMonthDay.getMonth() + 1
-          }/${afterMonthDay.getDate()}`}
+          id={afterMonthDayId}
+          key={afterMonthDayId}
           variant='contained'
           aria-describedby={popperId}
           onClick={open ? null : handleClickCalendar}
         >
-          <MonthCalendarGrid day={afterMonthDay} propsStyle={'#aaa'} />
-          <MonthPopper popperId={popperId} anchorEl={anchorEl} />
+          <MonthCalendarGrid
+            id={afterMonthDayId}
+            day={afterMonthDay}
+            propsStyle={'#aaa'}
+          />
         </GridListTile>
       );
     });
-
   const handleClickAway = () => (open ? setOpen(false) : null);
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div className={classes.root}>
-        <GridList
-          cellHeight={'auto'}
-          className={classes.gridList}
-          cols={7}
-        >
+        <GridList cellHeight={'auto'} className={classes.gridList} cols={7}>
           {calendar}
+          <MonthPopper popperId={popperId} anchorEl={anchorEl} day={currentDay} />
         </GridList>
       </div>
     </ClickAwayListener>

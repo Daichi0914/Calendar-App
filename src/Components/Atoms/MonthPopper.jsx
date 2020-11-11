@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Popper from '@material-ui/core/Popper';
-import Paper from '@material-ui/core/Paper';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import { makeStyles, Button, Popper, Paper, DialogActions } from '@material-ui/core';
 
 import { PopperToggle } from '../../Recoil/PopperToggleState';
+import MonthPopperContents from './MonthPopperContents';
+import { Plans } from '../../Recoil/PlansData';
 
 const useStyles = makeStyles({
   paper: {
@@ -18,6 +13,8 @@ const useStyles = makeStyles({
   },
   popper: {
     zIndex: 1,
+    border: 'solid 1px #000',
+    borderRadius: 5,
     '&[x-placement*="right"] $arrow': {
       left: 0,
       marginLeft: '-1.1em',
@@ -57,14 +54,25 @@ const useStyles = makeStyles({
   },
 });
 
-const MonthPopper = ({ popperId, anchorEl }) => {
+const MonthPopper = ({ popperId, anchorEl, day }) => {
   const classes = useStyles();
   const [arrowRef, setArrowRef] = useState(null);
 
   const [open, setOpen] = useRecoilState(PopperToggle);
+  const [plan, setPlan] = useRecoilState(Plans);
+  const resetPopper = useResetRecoilState(Plans);
+
+  const conversionDate = new Date(day);
+  const conversionPlanStartDate = new Date(plan.PlanStart);
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    resetPopper();
+  };
 
   const handleClickButton = () => {
     setOpen(prevOpen => !prevOpen);
+    resetPopper();
   };
 
   return (
@@ -89,20 +97,23 @@ const MonthPopper = ({ popperId, anchorEl }) => {
         },
       }}
     >
-      <span className={classes.arrow} ref={setArrowRef} />
+      {conversionDate.getDate() === conversionPlanStartDate.getDate() &&
+      conversionDate.getFullYear() === conversionPlanStartDate.getFullYear() &&
+      conversionDate.getMonth() === conversionPlanStartDate.getMonth() ? (
+        <span className={classes.arrow} ref={setArrowRef} />
+      ) : null}
       <Paper className={classes.paper}>
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Let Google help apps determine location.</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClickButton} color='primary'>
-            Disagree
-          </Button>
-          <Button onClick={handleClickButton} color='primary'>
-            Agree
-          </Button>
-        </DialogActions>
+        <form className={classes.container} noValidate onSubmit={handleSubmit}>
+          <MonthPopperContents day={day} />
+          <DialogActions>
+            <Button onClick={handleClickButton} color='primary'>
+              キャンセル
+            </Button>
+            <Button onClick={handleClickButton} color='primary' type='submit'>
+              保存
+            </Button>
+          </DialogActions>
+        </form>
       </Paper>
     </Popper>
   );
