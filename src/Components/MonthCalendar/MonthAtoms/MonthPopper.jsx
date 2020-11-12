@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
-import { AuthContext } from '../../AUTH/AuthService';
+import { AuthContext } from '../../../AUTH/AuthService';
 import { makeStyles, Button, Popper, Paper, DialogActions } from '@material-ui/core';
 
-import { PopperToggle } from '../../Recoil/PopperToggleState';
+import { PopperToggle } from '../../../Recoil/PopperToggleState';
 import MonthPopperContents from './MonthPopperContents';
-import { Plans } from '../../Recoil/PlansData';
+import { Plans } from '../../../Recoil/PlansData';
 
-import firebase from '../../Config/firebase';
+import firebase from '../../../Config/firebase';
 
 const useStyles = makeStyles({
   paper: {

@@ -14,10 +14,10 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
-import UnitChangeButton from './Atoms/UnitChangeButton';
-import { PopperToggle } from '../Recoil/PopperToggleState';
+import UnitChangeButton from './HeaderAtoms/UnitChangeButton';
+import { PopperToggle } from '../../Recoil/PopperToggleState';
 
-import firebase from '../Config/firebase';
+import firebase from '../../Config/firebase';
 
 const useStyles = makeStyles(theme => ({
   grow: {

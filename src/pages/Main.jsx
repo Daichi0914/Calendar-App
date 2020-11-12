@@ -3,12 +3,12 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { AuthContext } from '../AUTH/AuthService';
 
-import Header from '../Components/Header';
-import SubHeader from '../Components/SubHeader';
-import DayCalendar from '../Components/DayCalendar';
-import WeekCalendar from '../Components/WeekCalendar';
-import MonthCalendar from '../Components/MonthCalendar';
-import YearCalendar from '../Components/YearCalendar';
+import Header from '../Components/Header/Header';
+import SubHeader from '../Components/Header/SubHeader';
+import DayCalendar from '../Components/DayCalendar/DayCalendar';
+import WeekCalendar from '../Components/WeekCalendar/WeekCalendar';
+import MonthCalendar from '../Components/MonthCalendar/MonthCalendar';
+import YearCalendar from '../Components/YearCalendar/YearCalendar';
 
 import { Unit } from '../Recoil/UnitDisplay';
 

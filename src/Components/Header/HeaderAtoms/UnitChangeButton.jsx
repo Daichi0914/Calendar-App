@@ -3,8 +3,8 @@ import { useRecoilState } from 'recoil';
 
 import { makeStyles, Button, ButtonGroup } from '@material-ui/core';
 
-import { Unit } from '../../Recoil/UnitDisplay';
-import { PopperToggle } from '../../Recoil/PopperToggleState';
+import { Unit } from '../../../Recoil/UnitDisplay';
+import { PopperToggle } from '../../../Recoil/PopperToggleState';
 
 const useStyles = makeStyles(theme => ({
   current: {

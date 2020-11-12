@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { makeStyles, TextField, DialogContent, Divider } from '@material-ui/core';
-import { Plans } from '../../Recoil/PlansData';
+import { Plans } from '../../../Recoil/PlansData';
 
 const useStyles = makeStyles(theme => ({
   content: {

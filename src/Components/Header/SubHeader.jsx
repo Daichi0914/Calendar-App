@@ -1,9 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { Unit } from '../Recoil/UnitDisplay';
-import { NowYear, NowMonth, CurrentYear, CurrentMonth } from '../Recoil/DateData';
-import { PopperToggle } from '../Recoil/PopperToggleState';
+import { Unit } from '../../Recoil/UnitDisplay';
+import { NowYear, NowMonth, CurrentYear, CurrentMonth } from '../../Recoil/DateData';
+import { PopperToggle } from '../../Recoil/PopperToggleState';
 
 import {
   makeStyles,
@@ -99,8 +99,16 @@ const SubHeader = () => {
             {currentYear}年 {currentMonth + 1}月
           </h2>
         ) : (
-          <span></span>
+          null
         )}
+        {currentUnit === 'year' ? (
+          <h2>
+            {currentYear}年
+          </h2>
+        ) : (
+          null
+        )}
+        <span></span>
         <ButtonGroup size='medium' style={{ backgroundColor: '#eee' }}>
           <Button onClick={handleDecrease}>＜</Button>
           <Button onClick={handleToday}>今日</Button>

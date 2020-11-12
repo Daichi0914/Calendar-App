@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../AUTH/AuthService';
+import { AuthContext } from '../../AUTH/AuthService';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   NowYear,
@@ -8,19 +8,19 @@ import {
   DayOfWeek,
   CurrentYear,
   CurrentMonth,
-} from '../Recoil/DateData';
-import { AnchorEl, PopperToggle } from '../Recoil/PopperToggleState';
-import { OneWeekWeatherData } from '../Recoil/OneWeekWeatherData';
-import { PlansData } from '../Recoil/PlansData';
+} from '../../Recoil/DateData';
+import { AnchorEl, PopperToggle } from '../../Recoil/PopperToggleState';
+import { OneWeekWeatherData } from '../../Recoil/OneWeekWeatherData';
+import { PlansData } from '../../Recoil/PlansData';
 
-import MonthCalendarGrid from '../Components/Atoms/MonthCalendarGrid';
-import MonthPopper from './Atoms/MonthPopper';
+import MonthCalendarGrid from './MonthAtoms/MonthCalendarGrid';
+import MonthPopper from './MonthAtoms/MonthPopper';
 
 import { makeStyles, GridList, GridListTile, ClickAwayListener } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
-import OpenWeatherAPI from '../API/OpenWeatherAPI';
-import firebase from '../Config/firebase';
+import OpenWeatherAPI from '../../API/OpenWeatherAPI';
+import firebase from '../../Config/firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
