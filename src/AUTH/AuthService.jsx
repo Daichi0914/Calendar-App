@@ -12,7 +12,6 @@ const AuthProvider = ({ children }) => {
     });
 
     return () => {
-      // console.log('アンマウンティング')
       unsubscribe();
     };
   }, []);

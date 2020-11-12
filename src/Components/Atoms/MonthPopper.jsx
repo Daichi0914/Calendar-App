@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import React, { useState, useContext } from 'react';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { AuthContext } from '../../AUTH/AuthService';
 import { makeStyles, Button, Popper, Paper, DialogActions } from '@material-ui/core';
 
 import { PopperToggle } from '../../Recoil/PopperToggleState';
 import MonthPopperContents from './MonthPopperContents';
 import { Plans } from '../../Recoil/PlansData';
+
+import firebase from '../../Config/firebase';
 
 const useStyles = makeStyles({
   paper: {
@@ -59,20 +62,50 @@ const MonthPopper = ({ popperId, anchorEl, day }) => {
   const [arrowRef, setArrowRef] = useState(null);
 
   const [open, setOpen] = useRecoilState(PopperToggle);
-  const [plan, setPlan] = useRecoilState(Plans);
+  const plan = useRecoilValue(Plans);
   const resetPopper = useResetRecoilState(Plans);
+
+  const user = useContext(AuthContext);
 
   const conversionDate = new Date(day);
   const conversionPlanStartDate = new Date(plan.PlanStart);
 
-  const handleSubmit = e => {
-    e.preventDefault();
+  const handleClickCancel = () => {
+    setOpen(prevOpen => !prevOpen);
     resetPopper();
   };
 
-  const handleClickButton = () => {
-    setOpen(prevOpen => !prevOpen);
-    resetPopper();
+  const key = `${conversionPlanStartDate.getFullYear()}-${
+    conversionPlanStartDate.getMonth() + 1 < 10 ? '0' : ''
+  }${conversionPlanStartDate.getMonth() + 1}-${
+    conversionPlanStartDate.getDate() < 10 ? '0' : ''
+  }${conversionPlanStartDate.getDate()}`;
+
+  const handleClickSave = () => {
+    if (plan.PlanStart < plan.PlanEnd) {
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(user.uid)
+        .collection('Plans')
+        .add({
+          event: {
+            Key: key,
+            PlanName: plan.PlanName,
+            PlanStart: plan.PlanStart,
+            PlanEnd: plan.PlanEnd,
+            PlanMemo: plan.PlanMemo,
+          },
+        })
+        .then(docRef => {
+          console.log('Document written with ID: ', docRef.id);
+        })
+        .catch(err => console.log(err));
+      setOpen(prevOpen => !prevOpen);
+      resetPopper();
+    } else {
+      window.alert('イベント開始日時が終了日時を超えています。');
+    }
   };
 
   return (
@@ -103,17 +136,15 @@ const MonthPopper = ({ popperId, anchorEl, day }) => {
         <span className={classes.arrow} ref={setArrowRef} />
       ) : null}
       <Paper className={classes.paper}>
-        <form className={classes.container} noValidate onSubmit={handleSubmit}>
-          <MonthPopperContents day={day} />
-          <DialogActions>
-            <Button onClick={handleClickButton} color='primary'>
-              キャンセル
-            </Button>
-            <Button onClick={handleClickButton} color='primary' type='submit'>
-              保存
-            </Button>
-          </DialogActions>
-        </form>
+        <MonthPopperContents day={day} />
+        <DialogActions>
+          <Button onClick={handleClickCancel} color='primary'>
+            キャンセル
+          </Button>
+          <Button onClick={handleClickSave} color='primary'>
+            保存
+          </Button>
+        </DialogActions>
       </Paper>
     </Popper>
   );

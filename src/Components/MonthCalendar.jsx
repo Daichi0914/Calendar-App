@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../AUTH/AuthService';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
   NowYear,
@@ -8,16 +9,18 @@ import {
   CurrentYear,
   CurrentMonth,
 } from '../Recoil/DateData';
+import { AnchorEl, PopperToggle } from '../Recoil/PopperToggleState';
+import { OneWeekWeatherData } from '../Recoil/OneWeekWeatherData';
+import { PlansData } from '../Recoil/PlansData';
+
 import MonthCalendarGrid from '../Components/Atoms/MonthCalendarGrid';
 import MonthPopper from './Atoms/MonthPopper';
 
-import { AnchorEl, PopperToggle } from '../Recoil/PopperToggleState';
-import {OneWeekWeatherData} from '../Recoil/OneWeekWeatherData';
-
 import { makeStyles, GridList, GridListTile, ClickAwayListener } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 
 import OpenWeatherAPI from '../API/OpenWeatherAPI';
-
+import firebase from '../Config/firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -41,6 +44,14 @@ const useStyles = makeStyles(theme => ({
     borderBottom: 'solid 1px #ddd',
     borderRight: 'solid 1px #ddd',
   },
+  labels: {
+    position: 'absolute',
+    height: 30,
+    width: '100%',
+    '& > * + *': {
+      marginTop: theme.spacing(1),
+    },
+  },
 }));
 
 const MonthCalendar = () => {
@@ -49,15 +60,36 @@ const MonthCalendar = () => {
   const [nowYear, setNowYear] = useRecoilState(NowYear);
   const [nowMonth, setNowMonth] = useRecoilState(NowMonth);
   const [today, setToday] = useRecoilState(Today);
+  const [plansData, setPlansData] = useRecoilState(PlansData);
   const setDayOfWeek = useSetRecoilState(DayOfWeek);
-
   const [currentYear, setCurrentYear] = useRecoilState(CurrentYear);
   const [currentMonth, setCurrentMonth] = useRecoilState(CurrentMonth);
   const [open, setOpen] = useRecoilState(PopperToggle);
-
   const [currentDay, setCurrentDay] = useState('');
+  const setOneWeekWeatherData = useSetRecoilState(OneWeekWeatherData);
+  const user = useContext(AuthContext);
 
-  const [oneWeekWeatherData, setOneWeekWeatherData] = useRecoilState(OneWeekWeatherData);
+  useEffect(() => {
+    const myListItem = async () => {
+      try {
+        const querySnapshot = await firebase
+          .firestore()
+          .collection('users')
+          .doc(user.uid)
+          .collection('Plans')
+          .get();
+        const fetchPlans = querySnapshot.docs.map(
+          // e => e.pf.sn.proto.mapValue.fields.event
+          e => e.pf.sn.proto.mapValue.fields.event.mapValue.fields
+        );
+        setPlansData(fetchPlans);
+        console.log(querySnapshot.docs[0].pf.sn);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    myListItem();
+  }, [open]);
 
   useEffect(() => {
     const todayData = new Date();
@@ -70,16 +102,14 @@ const MonthCalendar = () => {
     const weatherApi = async () => {
       try {
         const weatherItems = await OpenWeatherAPI.OpenWeather();
-        const oneWeekWeather = weatherItems.data.daily.map(i => i)
-        setOneWeekWeatherData(oneWeekWeather)
+        const oneWeekWeather = weatherItems.data.daily;
+        setOneWeekWeatherData(oneWeekWeather);
       } catch (error) {
         console.log(error);
       }
     };
     weatherApi();
   }, [today]);
-
-  console.log(oneWeekWeatherData)
 
   const popperId = open ? 'simple-popper' : undefined;
   const handleClickCalendar = e => {
@@ -94,9 +124,6 @@ const MonthCalendar = () => {
   // 今月の日数
   const thisMonth = new Date(currentYear, currentMonth + 1, 0);
   const thisMonthLength = thisMonth.getDate();
-  // 来月の日数
-  // const afterMonth = new Date(currentYear, currentMonth + 2, 0);
-  // const afterMonthLength = afterMonth.getDate();
 
   const calendar = [];
 
@@ -112,6 +139,14 @@ const MonthCalendar = () => {
       }${beforeMonthDay.getMonth() + 1}-${
         beforeMonthDay.getDate() < 10 ? '0' : ''
       }${beforeMonthDay.getDate()}`;
+      const result = plansData
+        .map(e => e.Key.stringValue)
+        .filter(value => {
+          return value === beforeMonthDayId;
+        });
+      console.log(plansData);
+      console.log(plansData.map(e => e.Key.stringValue));
+      console.log(result)
       calendar.push(
         <GridListTile
           id={beforeMonthDayId}
@@ -126,12 +161,19 @@ const MonthCalendar = () => {
             day={beforeMonthDay}
             propsStyle={'#aaa'}
           />
-          <MonthPopper
-            popperId={popperId}
-            anchorEl={anchorEl}
-            id={beforeMonthDayId}
-            key={beforeMonthDayId}
-          />
+          <div className={classes.labels}>
+            {result[0] ? (
+              <Alert severity='success' icon={false}>
+                {plansData.PlanName}
+              </Alert>
+            ) : null}
+            {result[1] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result.length > 2 ? (
+              <div
+                style={{ height: 10, margin: 0, fontSize: 10, textAlign: 'end' }}
+              >{`他${result.length - 2}件...`}</div>
+            ) : null}
+          </div>
         </GridListTile>
       );
     });
@@ -167,6 +209,16 @@ const MonthCalendar = () => {
       const dayId = `${day.getFullYear()}-${day.getMonth() + 1 < 10 ? '0' : ''}${
         day.getMonth() + 1
       }-${day.getDate() < 10 ? '0' : ''}${day.getDate()}`;
+      const resultKey = plansData
+        // .map(e => e.mapValue.fields.Key.stringValue)
+        .map(e => e.Key.stringValue)
+        .filter(value => {
+          return value === dayId;
+        });
+      // const resultPlanName = plansData.map(e => e.mapValue.fields.PlanName.stringValue);
+        // console.log(plansData);
+        // console.log(resultKey);
+        // console.log(resultPlanName);
       calendar.push(
         <GridListTile
           className={!open ? classes.gridTile : classes.openGridTile}
@@ -177,7 +229,15 @@ const MonthCalendar = () => {
           onClick={open ? null : handleClickCalendar}
         >
           <MonthCalendarGrid id={dayId} day={day} />
-          {/* <MonthPopper popperId={popperId} anchorEl={anchorEl} id={dayId} key={day} /> */}
+          <div className={classes.labels}>
+            {resultKey[0] ? <Alert severity='success' icon={false}></Alert> : null}
+            {resultKey[1] ? <Alert severity='success' icon={false}></Alert> : null}
+            {resultKey.length > 2 ? (
+              <div
+                style={{ height: 10, margin: 0, fontSize: 10, textAlign: 'end' }}
+              >{`他${resultKey.length - 2}件...`}</div>
+            ) : null}
+          </div>
         </GridListTile>
       );
     });
@@ -191,6 +251,11 @@ const MonthCalendar = () => {
       }${afterMonthDay.getMonth() + 1}-${
         afterMonthDay.getDate() < 10 ? '0' : ''
       }${afterMonthDay.getDate()}`;
+      const result = plansData
+        .map(e => e.Key.stringValue)
+        .filter(value => {
+          return value === afterMonthDayId;
+        });
       calendar.push(
         <GridListTile
           className={!open ? classes.gridTile : classes.openGridTile}
@@ -205,13 +270,20 @@ const MonthCalendar = () => {
             day={afterMonthDay}
             propsStyle={'#aaa'}
           />
+          <div className={classes.labels}>
+            {result[0] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result[1] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result.length > 2 ? (
+              <div
+                style={{ height: 10, margin: 0, fontSize: 10, textAlign: 'end' }}
+              >{`他${result.length - 2}件...`}</div>
+            ) : null}
+          </div>
         </GridListTile>
       );
     });
 
   const handleClickAway = () => (open ? setOpen(false) : null);
-
-  console.log(calendar[0])
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>

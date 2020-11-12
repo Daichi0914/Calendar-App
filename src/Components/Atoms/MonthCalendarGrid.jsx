@@ -44,7 +44,6 @@ const useStyles = makeStyles({
     width: 35,
     height: 35,
     margin: 5,
-    // backgroundImage: `url()`,
   },
 });
 
