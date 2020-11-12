@@ -79,17 +79,17 @@ const MonthCalendar = () => {
           .collection('Plans')
           .get();
         const fetchPlans = querySnapshot.docs.map(
-          // e => e.pf.sn.proto.mapValue.fields.event
-          e => e.pf.sn.proto.mapValue.fields.event.mapValue.fields
+          doc => doc.data()
         );
         setPlansData(fetchPlans);
-        console.log(querySnapshot.docs[0].pf.sn);
       } catch (error) {
         console.log(error);
       }
     };
     myListItem();
   }, [open]);
+
+  console.log(plansData);
 
   useEffect(() => {
     const todayData = new Date();
@@ -140,13 +140,10 @@ const MonthCalendar = () => {
         beforeMonthDay.getDate() < 10 ? '0' : ''
       }${beforeMonthDay.getDate()}`;
       const result = plansData
-        .map(e => e.Key.stringValue)
+        .map(e => e.event.Key)
         .filter(value => {
           return value === beforeMonthDayId;
         });
-      console.log(plansData);
-      console.log(plansData.map(e => e.Key.stringValue));
-      console.log(result)
       calendar.push(
         <GridListTile
           id={beforeMonthDayId}
@@ -209,16 +206,11 @@ const MonthCalendar = () => {
       const dayId = `${day.getFullYear()}-${day.getMonth() + 1 < 10 ? '0' : ''}${
         day.getMonth() + 1
       }-${day.getDate() < 10 ? '0' : ''}${day.getDate()}`;
-      const resultKey = plansData
-        // .map(e => e.mapValue.fields.Key.stringValue)
-        .map(e => e.Key.stringValue)
+      const result = plansData
+        .map(e => e.event.Key)
         .filter(value => {
           return value === dayId;
         });
-      // const resultPlanName = plansData.map(e => e.mapValue.fields.PlanName.stringValue);
-        // console.log(plansData);
-        // console.log(resultKey);
-        // console.log(resultPlanName);
       calendar.push(
         <GridListTile
           className={!open ? classes.gridTile : classes.openGridTile}
@@ -230,12 +222,12 @@ const MonthCalendar = () => {
         >
           <MonthCalendarGrid id={dayId} day={day} />
           <div className={classes.labels}>
-            {resultKey[0] ? <Alert severity='success' icon={false}></Alert> : null}
-            {resultKey[1] ? <Alert severity='success' icon={false}></Alert> : null}
-            {resultKey.length > 2 ? (
+            {result[0] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result[1] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result.length > 2 ? (
               <div
                 style={{ height: 10, margin: 0, fontSize: 10, textAlign: 'end' }}
-              >{`他${resultKey.length - 2}件...`}</div>
+              >{`他${result.length - 2}件...`}</div>
             ) : null}
           </div>
         </GridListTile>
@@ -252,7 +244,7 @@ const MonthCalendar = () => {
         afterMonthDay.getDate() < 10 ? '0' : ''
       }${afterMonthDay.getDate()}`;
       const result = plansData
-        .map(e => e.Key.stringValue)
+        .map(e => e.event.Key)
         .filter(value => {
           return value === afterMonthDayId;
         });
