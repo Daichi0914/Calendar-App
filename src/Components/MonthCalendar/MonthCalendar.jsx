@@ -20,7 +20,7 @@ import { makeStyles, GridList, GridListTile, ClickAwayListener } from '@material
 import Alert from '@material-ui/lab/Alert';
 
 import OpenWeatherAPI from '../../API/OpenWeatherAPI';
-import firebase from '../../Config/firebase';
+import { db } from '../../utils/firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -72,15 +72,12 @@ const MonthCalendar = () => {
   useEffect(() => {
     const myListItem = async () => {
       try {
-        const querySnapshot = await firebase
-          .firestore()
+        const querySnapshot = await db
           .collection('users')
           .doc(user.uid)
           .collection('Plans')
           .get();
-        const fetchPlans = querySnapshot.docs.map(
-          doc => doc.data()
-        );
+        const fetchPlans = querySnapshot.docs.map(doc => doc.data());
         setPlansData(fetchPlans);
       } catch (error) {
         console.log(error);

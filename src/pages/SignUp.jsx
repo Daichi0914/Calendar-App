@@ -19,7 +19,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import clsx from 'clsx';
 
-import firebase from '../Config/firebase';
+import { auth } from '../utils/firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -92,8 +92,7 @@ const SignUp = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    firebase
-      .auth()
+    auth
       .createUserWithEmailAndPassword(email, passValues.password)
       .then(() => {
         window.alert('登録が完了しました。');

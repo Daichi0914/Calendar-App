@@ -17,7 +17,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import UnitChangeButton from './HeaderAtoms/UnitChangeButton';
 import { PopperToggle } from '../../Recoil/PopperToggleState';
 
-import firebase from '../../Config/firebase';
+import { auth } from '../../utils/firebase';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -63,8 +63,7 @@ const Header = () => {
   const [open, setOpen] = useRecoilState(PopperToggle);
 
   const signOutButton = () => {
-    firebase
-      .auth()
+    auth
       .signOut()
       .then(() => {
         console.log('サインアウトしました');
@@ -106,11 +105,7 @@ const Header = () => {
     <div className={classes.grow}>
       <AppBar position='static' style={{ position: 'fixed' }}>
         <Toolbar>
-          <IconButton
-            edge='start'
-            color='inherit'
-            aria-label='open drawer'
-          >
+          <IconButton edge='start' color='inherit' aria-label='open drawer'>
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant='h6' noWrap>

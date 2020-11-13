@@ -19,7 +19,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import clsx from 'clsx';
 
-import firebase from '../Config/firebase';
+import { auth } from '../utils/firebase';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -81,8 +81,7 @@ const SignIn = ({ history }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    firebase
-      .auth()
+    auth
       .signInWithEmailAndPassword(email, passValues.password)
       .then(() => {
         history.push('/');
@@ -96,8 +95,7 @@ const SignIn = ({ history }) => {
   const user = useContext(AuthContext);
 
   // const handleReset = () => {
-  //   firebase
-  //     .auth()
+  //   auth
   //     .sendPasswordResetEmail(currentEmail)
   //     .then(function () {
   //       window.alert('パスワードリセット用メールを送信しました。');

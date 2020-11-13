@@ -7,7 +7,7 @@ import { PopperToggle } from '../../../Recoil/PopperToggleState';
 import MonthPopperContents from './MonthPopperContents';
 import { Plans } from '../../../Recoil/PlansData';
 
-import firebase from '../../../Config/firebase';
+import { db } from '../../../utils/firebase';
 
 const useStyles = makeStyles({
   paper: {
@@ -83,9 +83,7 @@ const MonthPopper = ({ popperId, anchorEl, day }) => {
 
   const handleClickSave = () => {
     if (plan.PlanStart < plan.PlanEnd) {
-      firebase
-        .firestore()
-        .collection('users')
+      db.collection('users')
         .doc(user.uid)
         .collection('Plans')
         .add({
