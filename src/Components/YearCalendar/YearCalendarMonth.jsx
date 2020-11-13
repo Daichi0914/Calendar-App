@@ -1,17 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import {
-  NowYear,
-  NowMonth,
-  Today,
-  DayOfWeek,
-  CurrentYear,
-  CurrentMonth,
-} from '../../Recoil/DateData';
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { CurrentYear } from '../../Recoil/DateData';
 
 import YearCalendarMonthGrid from './YearAtoms/YearCalendarMonthGrid';
 
-import { makeStyles, GridList, GridListTile, ClickAwayListener } from '@material-ui/core';
+import { makeStyles, GridList, GridListTile, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,40 +13,26 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-around',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
+    margin: '2% 3%',
   },
-  gridList: {
-    height: `calc((100vh - 150px) / 3)`,
-  },
-  gridTile: {
-    borderBottom: 'solid 1px #ddd',
-    borderRight: 'solid 1px #ddd',
-  },
-  labels: {
-    position: 'absolute',
-    height: 30,
+  month: {
     width: '100%',
-    '& > * + *': {
-      marginTop: theme.spacing(1),
-    },
+    fontSize: '1.2em',
+    marginBottom: 10,
+  },
+  dayGridListTile: {
+    width: 20,
+    height: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
-const YearCalendarMonth = () => {
+const YearCalendarMonth = ({ currentMonth }) => {
   const classes = useStyles();
-  const [nowYear, setNowYear] = useRecoilState(NowYear);
-  const [nowMonth, setNowMonth] = useRecoilState(NowMonth);
-  const [today, setToday] = useRecoilState(Today);
-  const [currentYear, setCurrentYear] = useRecoilState(CurrentYear);
-  const [currentMonth, setCurrentMonth] = useRecoilState(CurrentMonth);
-
-  useEffect(() => {
-    const todayData = new Date();
-    setNowYear(todayData.getFullYear());
-    setNowMonth(todayData.getMonth());
-    setToday(todayData.getDate());
-    setCurrentYear(nowYear);
-    setCurrentMonth(nowMonth);
-  }, [today]);
+  const currentYear = useRecoilValue(CurrentYear);
+  // const currentMonth = useRecoilValue(CurrentMonth);
 
   // 先月の日数
   const beforeMonth = new Date(currentYear, currentMonth, 0);
@@ -77,12 +56,7 @@ const YearCalendarMonth = () => {
         beforeMonthDay.getDate() < 10 ? '0' : ''
       }${beforeMonthDay.getDate()}`;
       calendar.push(
-        <GridListTile
-          id={beforeMonthDayId}
-          className={classes.gridTile}
-          key={beforeMonthDayId}
-          variant='contained'
-        >
+        <GridListTile id={beforeMonthDayId} key={beforeMonthDayId} variant='contained'>
           <YearCalendarMonthGrid
             id={beforeMonthDayId}
             day={beforeMonthDay}
@@ -124,12 +98,7 @@ const YearCalendarMonth = () => {
         day.getMonth() + 1
       }-${day.getDate() < 10 ? '0' : ''}${day.getDate()}`;
       calendar.push(
-        <GridListTile
-          className={classes.gridTile}
-          id={dayId}
-          key={dayId}
-          variant='contained'
-        >
+        <GridListTile id={dayId} key={dayId} variant='contained'>
           <YearCalendarMonthGrid id={dayId} day={day} />
         </GridListTile>
       );
@@ -145,12 +114,7 @@ const YearCalendarMonth = () => {
         afterMonthDay.getDate() < 10 ? '0' : ''
       }${afterMonthDay.getDate()}`;
       calendar.push(
-        <GridListTile
-          className={classes.gridTile}
-          id={afterMonthDayId}
-          key={afterMonthDayId}
-          variant='contained'
-        >
+        <GridListTile id={afterMonthDayId} key={afterMonthDayId} variant='contained'>
           <YearCalendarMonthGrid
             id={afterMonthDayId}
             day={afterMonthDay}
@@ -160,9 +124,30 @@ const YearCalendarMonth = () => {
       );
     });
 
+  const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+
   return (
     <div className={classes.root}>
-      <GridList cellHeight={'auto'} className={classes.gridList} cols={7}>
+      <Typography className={classes.month}>{currentMonth + 1}月</Typography>
+      <GridList cellHeight={'auto'} cols={7} style={{ width: '100%', marginBottom: 10 }}>
+        {weekdays.map(w => {
+          const styles = {};
+          if (w === '日') {
+            styles.color = 'red';
+          }
+          if (w === '土') {
+            styles.color = 'blue';
+          }
+          return (
+            <GridListTile>
+              <div className={classes.dayGridListTile}>
+                <Typography style={styles}>{w}</Typography>
+              </div>
+            </GridListTile>
+          );
+        })}
+      </GridList>
+      <GridList cellHeight={'auto'} cols={7}>
         {calendar}
       </GridList>
     </div>

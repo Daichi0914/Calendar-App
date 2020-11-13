@@ -6,34 +6,21 @@ import { NowYear, NowMonth, Today } from '../../../Recoil/DateData';
 import { makeStyles, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
-  root: {
-    display: 'flex',
-    margin: '5px',
-    justifyContent: 'space-between',
-    height: 10
-  },
   dayNum: {
-    width: 35,
-    height: 35,
-    margin: '5px',
+    width: 20,
+    height: 20,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
   todayNum: {
-    width: 35,
-    height: 35,
-    margin: '5px',
+    width: 20,
+    height: 20,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '100px',
     backgroundColor: 'orange',
-  },
-  weatherImgContainer: {
-    width: 35,
-    height: 35,
-    margin: 5,
   },
 });
 
@@ -58,12 +45,10 @@ const MonthCalendarGrid = ({ day, propsStyle }) => {
   const dateValidationFull = dateValidation && today === day.getDate();
 
   return (
-    <div className={classes.root}>
-      <div className={dateValidationFull ? classes.todayNum : classes.dayNum}>
-        <Typography
-          style={{ color: propsStyle ? propsStyle : color() }}
-        >{`${day.getDate()}`}</Typography>
-      </div>
+    <div className={dateValidationFull ? classes.todayNum : classes.dayNum}>
+      <Typography
+        style={{ color: propsStyle ? propsStyle : color() }}
+      >{`${day.getDate()}`}</Typography>
     </div>
   );
 };

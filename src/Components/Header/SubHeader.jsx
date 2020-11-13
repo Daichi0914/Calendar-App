@@ -35,6 +35,16 @@ const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
+  yearHeader: {
+    margin: 0,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    '& > *': {
+      margin: theme.spacing(1.5),
+    },
+    borderBottom: 'solid 1px #ddd',
+  },
   monthHeader: {
     backgroundColor: '#fff',
     width: '100%',
@@ -57,7 +67,34 @@ const SubHeader = () => {
   const nowMonth = useRecoilValue(NowMonth);
   const [open, setOpen] = useRecoilState(PopperToggle);
 
-  const handleDecrease = () => {
+  const handleDecreaseClick = () => {
+    switch (currentUnit) {
+      case 'month':
+        return handleMonthDecrease();
+      case 'year':
+        return handleYearDecrease();
+    }
+  };
+
+  const handleIncreaseClick = () => {
+    switch (currentUnit) {
+      case 'month':
+        return handleMonthIncrease();
+      case 'year':
+        return handleYearIncrease();
+    }
+  };
+
+  // Today Handle ///////////////////////////////////////////////////////////
+  const handleToday = () => {
+    return open
+      ? (setOpen(false), setCurrentYear(nowYear), setCurrentMonth(nowMonth))
+      : (setCurrentYear(nowYear), setCurrentMonth(nowMonth));
+  };
+  ///////////////////////////////////////////////////////////////////////////
+
+  // Month Handle //////////////////////////////////////////////////////////////////
+  const handleMonthDecrease = () => {
     switch (currentMonth) {
       case 0:
         return open
@@ -70,13 +107,7 @@ const SubHeader = () => {
     }
   };
 
-  const handleToday = () => {
-    return open
-      ? (setOpen(false), setCurrentYear(nowYear), setCurrentMonth(nowMonth))
-      : (setCurrentYear(nowYear), setCurrentMonth(nowMonth));
-  };
-
-  const handleIncrease = () => {
+  const handleMonthIncrease = () => {
     switch (currentMonth) {
       case 11:
         return open
@@ -90,29 +121,31 @@ const SubHeader = () => {
           : setCurrentMonth(currentMonth + 1);
     }
   };
+  /////////////////////////////////////////////////////////////////////////////////
+
+  // Year Handle /////////////////////
+  const handleYearDecrease = () => {
+    setCurrentYear(currentYear - 1);
+  };
+  const handleYearIncrease = () => {
+    setCurrentYear(currentYear + 1);
+  };
+  ///////////////////////////////////
 
   return (
     <div className={classes.root}>
-      <div className={classes.subHeader}>
+      <div className={currentUnit === 'year' ? classes.yearHeader : classes.subHeader}>
         {currentUnit === 'month' ? (
           <h2>
             {currentYear}年 {currentMonth + 1}月
           </h2>
-        ) : (
-          null
-        )}
-        {currentUnit === 'year' ? (
-          <h2>
-            {currentYear}年
-          </h2>
-        ) : (
-          null
-        )}
+        ) : null}
+        {currentUnit === 'year' ? <h2>{currentYear}年</h2> : null}
         <span></span>
         <ButtonGroup size='medium' style={{ backgroundColor: '#eee' }}>
-          <Button onClick={handleDecrease}>＜</Button>
+          <Button onClick={handleDecreaseClick}>＜</Button>
           <Button onClick={handleToday}>今日</Button>
-          <Button onClick={handleIncrease}>＞</Button>
+          <Button onClick={handleIncreaseClick}>＞</Button>
         </ButtonGroup>
       </div>
       {currentUnit === 'month' ? (

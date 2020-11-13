@@ -277,7 +277,7 @@ const MonthCalendar = () => {
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <div className={classes.root}>
-        <GridList cellHeight={'auto'} className={classes.gridList} cols={7}>
+        <GridList cellHeight={'auto'} className={classes.gridList} cols={7} row={6}>
           {calendar}
           <MonthPopper popperId={popperId} anchorEl={anchorEl} day={currentDay} />
         </GridList>
