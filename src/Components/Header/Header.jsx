@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-
+import { useRecoilState, useRecoilValue } from 'recoil';
+import clsx from 'clsx';
 import {
   makeStyles,
   AppBar,
@@ -10,12 +10,16 @@ import {
   Typography,
   MenuItem,
   Menu,
+  Drawer,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 
 import UnitChangeButton from './HeaderAtoms/UnitChangeButton';
+import HeaderDrawer from './HeaderAtoms/HeaderDrawer';
 import { PopperToggle } from '../../Recoil/PopperToggleState';
+import { MenuDrawerState } from '../../Recoil/MenuDrawerState';
+import { DrawerWidth } from '../../Recoil/DrawerWidth';
 
 import { auth } from '../../utils/firebase';
 
@@ -31,23 +35,32 @@ const useStyles = makeStyles(theme => ({
       margin: theme.spacing(1),
     },
   },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: drawerWidth => `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth => drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawer: {
+    width: drawerWidth => drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth => drawerWidth,
+  },
   title: {
     display: 'none',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(2),
       display: 'block',
-    },
-  },
-  inputRoot: {
-    color: 'inherit',
-  },
-  inputInput: {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
     },
   },
   sectionDesktop: {
@@ -58,9 +71,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Header = () => {
-  const classes = useStyles();
+  const drawerWidth = useRecoilValue(DrawerWidth);
+  const classes = useStyles(drawerWidth);
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useRecoilState(PopperToggle);
+  const [drawerOpen, setDrawerOpen] = useRecoilState(MenuDrawerState);
 
   const signOutButton = () => {
     auth
@@ -85,6 +100,10 @@ const Header = () => {
     return open ? (setOpen(false), setAnchorEl(null)) : setAnchorEl(null);
   };
 
+  const handleDrawerToggle = () => {
+    return drawerOpen ? setDrawerOpen(false) : setDrawerOpen(true);
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -96,16 +115,27 @@ const Header = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>アカウント</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>アカウント</MenuItem> */}
       <MenuItem onClick={() => signOutButton()}>サインアウト</MenuItem>
     </Menu>
   );
 
   return (
     <div className={classes.grow}>
-      <AppBar position='static' style={{ position: 'fixed' }}>
+      <AppBar
+        position='fixed'
+        style={{ position: 'fixed' }}
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: drawerOpen,
+        })}
+      >
         <Toolbar>
-          <IconButton edge='start' color='inherit' aria-label='open drawer'>
+          <IconButton
+            edge='start'
+            color='inherit'
+            aria-label='open drawer'
+            onClick={handleDrawerToggle}
+          >
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant='h6' noWrap>
@@ -130,6 +160,17 @@ const Header = () => {
           </div>
         </Toolbar>
       </AppBar>
+      <Drawer
+        className={classes.drawer}
+        variant='persistent'
+        anchor='left'
+        open={drawerOpen}
+        classes={{
+          paper: classes.drawerPaper,
+        }}
+      >
+        <HeaderDrawer />
+      </Drawer>
       {renderMenu}
     </div>
   );

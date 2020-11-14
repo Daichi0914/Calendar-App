@@ -4,7 +4,9 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { Unit } from '../../Recoil/UnitDisplay';
 import { NowYear, NowMonth, CurrentYear, CurrentMonth } from '../../Recoil/DateData';
 import { PopperToggle } from '../../Recoil/PopperToggleState';
-
+import { DrawerWidth } from '../../Recoil/DrawerWidth';
+import { MenuDrawerState } from '../../Recoil/MenuDrawerState';
+import clsx from 'clsx';
 import {
   makeStyles,
   Button,
@@ -22,6 +24,20 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     position: 'fixed',
     right: 0,
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    width: drawerWidth => `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth => drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   subHeader: {
     margin: 0,
@@ -59,13 +75,15 @@ const useStyles = makeStyles(theme => ({
 const weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
 const SubHeader = () => {
-  const classes = useStyles();
+  const drawerWidth = useRecoilValue(DrawerWidth);
+  const classes = useStyles(drawerWidth);
   const currentUnit = useRecoilValue(Unit);
   const [currentYear, setCurrentYear] = useRecoilState(CurrentYear);
   const [currentMonth, setCurrentMonth] = useRecoilState(CurrentMonth);
   const nowYear = useRecoilValue(NowYear);
   const nowMonth = useRecoilValue(NowMonth);
   const [open, setOpen] = useRecoilState(PopperToggle);
+  const drawerOpen = useRecoilValue(MenuDrawerState);
 
   const handleDecreaseClick = () => {
     switch (currentUnit) {
@@ -73,6 +91,8 @@ const SubHeader = () => {
         return handleMonthDecrease();
       case 'year':
         return handleYearDecrease();
+      default:
+        break;
     }
   };
 
@@ -82,6 +102,8 @@ const SubHeader = () => {
         return handleMonthIncrease();
       case 'year':
         return handleYearIncrease();
+      default:
+        break;
     }
   };
 
@@ -133,7 +155,11 @@ const SubHeader = () => {
   ///////////////////////////////////
 
   return (
-    <div className={classes.root}>
+    <div
+      className={clsx(classes.appBar + ' ' + classes.root, {
+        [classes.appBarShift + ' ' + classes.root]: drawerOpen,
+      })}
+    >
       <div className={currentUnit === 'year' ? classes.yearHeader : classes.subHeader}>
         {currentUnit === 'month' ? (
           <h2>

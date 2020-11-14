@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../AUTH/AuthService';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import clsx from 'clsx';
 import {
   NowYear,
   NowMonth,
@@ -12,6 +13,8 @@ import {
 import { AnchorEl, PopperToggle } from '../../Recoil/PopperToggleState';
 import { OneWeekWeatherData } from '../../Recoil/OneWeekWeatherData';
 import { PlansData } from '../../Recoil/PlansData';
+import { DrawerWidth } from '../../Recoil/DrawerWidth';
+import { MenuDrawerState } from '../../Recoil/MenuDrawerState';
 
 import MonthCalendarGrid from './MonthAtoms/MonthCalendarGrid';
 import MonthPopper from './MonthAtoms/MonthPopper';
@@ -29,6 +32,19 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'space-around',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper,
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth => drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
   gridList: {
     height: `calc(100vh - 150px)`,
@@ -55,11 +71,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const MonthCalendar = () => {
-  const classes = useStyles();
+  const drawerWidth = useRecoilValue(DrawerWidth);
+  const classes = useStyles(drawerWidth);
   const [anchorEl, setAnchorEl] = useRecoilState(AnchorEl);
   const [nowYear, setNowYear] = useRecoilState(NowYear);
   const [nowMonth, setNowMonth] = useRecoilState(NowMonth);
-  const [today, setToday] = useRecoilState(Today);
+  const setToday = useSetRecoilState(Today);
   const [plansData, setPlansData] = useRecoilState(PlansData);
   const setDayOfWeek = useSetRecoilState(DayOfWeek);
   const [currentYear, setCurrentYear] = useRecoilState(CurrentYear);
@@ -67,10 +84,11 @@ const MonthCalendar = () => {
   const [open, setOpen] = useRecoilState(PopperToggle);
   const [currentDay, setCurrentDay] = useState('');
   const setOneWeekWeatherData = useSetRecoilState(OneWeekWeatherData);
+  const drawerOpen = useRecoilValue(MenuDrawerState);
   const user = useContext(AuthContext);
 
   useEffect(() => {
-    const myListItem = async () => {
+    const myPlans = async () => {
       try {
         const querySnapshot = await db
           .collection('users')
@@ -83,10 +101,8 @@ const MonthCalendar = () => {
         console.log(error);
       }
     };
-    myListItem();
-  }, [open]);
-
-  console.log(plansData);
+    myPlans();
+  }, [setPlansData, user.uid]);
 
   useEffect(() => {
     const todayData = new Date();
@@ -106,7 +122,27 @@ const MonthCalendar = () => {
       }
     };
     weatherApi();
-  }, [today]);
+
+    return () => {
+      setNowYear('');
+      setNowMonth('');
+      setToday('');
+      setDayOfWeek('');
+      setCurrentYear('');
+      setCurrentMonth('');
+      setOneWeekWeatherData([]);
+    };
+  }, [
+    nowMonth,
+    nowYear,
+    setNowYear,
+    setNowMonth,
+    setToday,
+    setDayOfWeek,
+    setCurrentYear,
+    setCurrentMonth,
+    setOneWeekWeatherData,
+  ]);
 
   const popperId = open ? 'simple-popper' : undefined;
   const handleClickCalendar = e => {
@@ -194,6 +230,8 @@ const MonthCalendar = () => {
     case 6: // 土曜
       calendar.splice(0, beforeMonthLength - 6);
       break;
+    default:
+      break;
   }
 
   Array.apply(null, { length: thisMonthLength })
@@ -276,7 +314,11 @@ const MonthCalendar = () => {
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
-      <div className={classes.root}>
+      <div
+        className={clsx(classes.appBar + ' ' + classes.root, {
+          [classes.appBarShift + ' ' + classes.root]: drawerOpen,
+        })}
+      >
         <GridList cellHeight={'auto'} className={classes.gridList} cols={7} row={6}>
           {calendar}
           <MonthPopper popperId={popperId} anchorEl={anchorEl} day={currentDay} />

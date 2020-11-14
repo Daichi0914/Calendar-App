@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { AuthContext } from '../AUTH/AuthService';
-
 import Header from '../Components/Header/Header';
 import SubHeader from '../Components/Header/SubHeader';
 import DayCalendar from '../Components/DayCalendar/DayCalendar';
