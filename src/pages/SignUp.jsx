@@ -92,25 +92,32 @@ const SignUp = props => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    auth
-      .createUserWithEmailAndPassword(email, passValues.password)
-      .then(() => {
-        window.alert('登録が完了しました。');
-        props.history.push('/SignIn');
-      })
-      .catch(error => {
-        console.log(error);
-        if (user.email === email) {
-          window.alert('このメールアドレスは既に登録されています。');
-        } else {
-          window.alert('必要な情報を入力して下さい。');
-        }
-      });
+    if (passValues.password === againPassValues.password) {
+      auth
+        .createUserWithEmailAndPassword(email, passValues.password)
+        .then(() => {
+          window.alert('登録が完了しました。');
+          props.history.push('/SignIn');
+        })
+        .catch(error => {
+          console.log(error);
+          if (error.code === 'auth/email-already-in-use') {
+            window.alert('このメールアドレスは既に登録されています。');
+          } else {
+            window.alert('必要な情報を入力して下さい。');
+          }
+        });
+    } else {
+      window.alert('パスワードが一致しません。')
+    }
   };
 
   if (user) {
     return <Redirect to='/' />;
   }
+
+  console.log(email)
+  console.log(user ? user.email : null);
 
   return (
     <Card className={classes.root}>

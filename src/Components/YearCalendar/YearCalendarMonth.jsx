@@ -88,6 +88,8 @@ const YearCalendarMonth = ({ currentMonth }) => {
     case 6: // 土曜
       calendar.splice(0, beforeMonthLength - 6);
       break;
+    default:
+      break;
   }
 
   Array.apply(null, { length: thisMonthLength })

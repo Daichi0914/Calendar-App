@@ -102,7 +102,7 @@ const MonthCalendar = () => {
       }
     };
     myPlans();
-  }, [setPlansData, user.uid]);
+  }, [setPlansData, user.uid, plansData]);
 
   useEffect(() => {
     const todayData = new Date();
