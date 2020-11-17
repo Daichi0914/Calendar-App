@@ -64,11 +64,11 @@ const YearCalendar = () => {
     setCurrentYear(nowYear);
     setCurrentMonth(nowMonth);
   }, [
-    setNowYear,
-    setNowMonth,
-    setToday,
-    setCurrentYear,
-    setCurrentMonth,
+    // setNowYear,
+    // setNowMonth,
+    // setToday,
+    // setCurrentYear,
+    // setCurrentMonth,
     nowYear,
     nowMonth,
   ]);

@@ -102,7 +102,11 @@ const MonthCalendar = () => {
       }
     };
     myPlans();
-  }, [setPlansData, user.uid, plansData]);
+  }, [
+    // setPlansData,
+    user.uid,
+    plansData
+  ]);
 
   useEffect(() => {
     const todayData = new Date();
@@ -135,13 +139,13 @@ const MonthCalendar = () => {
   }, [
     nowMonth,
     nowYear,
-    setNowYear,
-    setNowMonth,
-    setToday,
-    setDayOfWeek,
-    setCurrentYear,
-    setCurrentMonth,
-    setOneWeekWeatherData,
+    // setNowYear,
+    // setNowMonth,
+    // setToday,
+    // setDayOfWeek,
+    // setCurrentYear,
+    // setCurrentMonth,
+    // setOneWeekWeatherData,
   ]);
 
   const popperId = open ? 'simple-popper' : undefined;

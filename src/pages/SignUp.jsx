@@ -116,9 +116,6 @@ const SignUp = props => {
     return <Redirect to='/' />;
   }
 
-  console.log(email)
-  console.log(user ? user.email : null);
-
   return (
     <Card className={classes.root}>
       <form onSubmit={handleSubmit}>
