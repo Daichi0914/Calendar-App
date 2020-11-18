@@ -64,14 +64,17 @@ const YearCalendar = () => {
     setCurrentYear(nowYear);
     setCurrentMonth(nowMonth);
   }, [
-    // setNowYear,
-    // setNowMonth,
-    // setToday,
-    // setCurrentYear,
-    // setCurrentMonth,
+    setNowYear,
+    setNowMonth,
+    setToday,
+    setCurrentYear,
+    setCurrentMonth,
     nowYear,
     nowMonth,
   ]);
+
+  console.log(nowYear)
+  console.log(nowMonth)
 
   const month = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 

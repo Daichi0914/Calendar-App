@@ -63,16 +63,14 @@ const HeaderDrawer = () => {
       <Divider />
       <List>
         {['天気', 'あああ', 'いいい', 'ううう'].map((text, index) => (
-          <Accordion>
+          <Accordion key={index}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls='panel1a-content'
               id='panel1a-header'
             >
               <ListItemIcon>{iconList(index)}</ListItemIcon>
-              <Typography className={classes.heading}>
-                <ListItemText primary={text} />
-              </Typography>
+              <ListItemText primary={text} />
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
