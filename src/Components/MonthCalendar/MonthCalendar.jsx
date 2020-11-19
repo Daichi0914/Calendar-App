@@ -95,20 +95,13 @@ const MonthCalendar = () => {
           .doc(user.uid)
           .collection('Plans')
           .get();
-        const fetchPlans = querySnapshot.docs.map(doc => doc.data());
-        setPlansData(fetchPlans);
+        setPlansData(querySnapshot.docs.map(doc => doc.data()));
       } catch (error) {
         console.log(error);
       }
     };
     myPlans();
-  }, [
-    setPlansData,
-    user.uid,
-    // plansData
-  ]);
-
-  console.log(plansData)
+  }, [setPlansData, user.uid, open]);
 
   useEffect(() => {
     const todayData = new Date();

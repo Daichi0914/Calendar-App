@@ -6,15 +6,15 @@ import { DailyWeatherData } from '../../../Recoil/OneWeekWeatherData';
 
 import { makeStyles, Typography } from '@material-ui/core';
 
-import w01d from '../../../Assets/01d.png';
-import w02d from '../../../Assets/02d.png';
-import w03d from '../../../Assets/03d.png';
-import w04d from '../../../Assets/04d.png';
-import w09d from '../../../Assets/09d.png';
-import w10d from '../../../Assets/10d.png';
-import w11d from '../../../Assets/11d.png';
-import w13d from '../../../Assets/13d.png';
-import w50d from '../../../Assets/50d.png';
+import w01d from '../../../Assets/Image/01d.png';
+import w02d from '../../../Assets/Image/02d.png';
+import w03d from '../../../Assets/Image/03d.png';
+import w04d from '../../../Assets/Image/04d.png';
+import w09d from '../../../Assets/Image/09d.png';
+import w10d from '../../../Assets/Image/10d.png';
+import w11d from '../../../Assets/Image/11d.png';
+import w13d from '../../../Assets/Image/13d.png';
+import w50d from '../../../Assets/Image/50d.png';
 
 const useStyles = makeStyles({
   root: {
