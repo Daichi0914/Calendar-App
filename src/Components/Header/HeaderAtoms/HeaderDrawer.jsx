@@ -38,21 +38,6 @@ const HeaderDrawer = () => {
     return drawerOpen ? setDrawerOpen(false) : setDrawerOpen(true);
   };
 
-  const iconList = i => {
-    switch (i) {
-      case 0:
-        return <WbSunnyIcon />;
-      case 1:
-        return <GitHubIcon />;
-      case 2:
-        return <GitHubIcon />;
-      case 3:
-        return <GitHubIcon />;
-      default:
-        break;
-    }
-  };
-
   return (
     <>
       <div className={classes.drawerHeader}>
@@ -62,24 +47,76 @@ const HeaderDrawer = () => {
       </div>
       <Divider />
       <List>
-        {['天気', 'あああ', 'いいい', 'ううう'].map((text, index) => (
-          <Accordion key={index}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls='panel1a-content'
-              id='panel1a-header'
-            >
-              <ListItemIcon>{iconList(index)}</ListItemIcon>
-              <ListItemText primary={text} />
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-                malesuada lacus ex, sit amet blandit leo lobortis eget.
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
-        ))}
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <ListItemIcon>
+              <WbSunnyIcon />
+            </ListItemIcon>
+            <ListItemText primary={'天気'} />
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              注意！：
+              <br />
+              広告ブロッカーをONにしていると、天気が表示されない場合があります。
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <ListItemIcon>
+              <GitHubIcon />
+            </ListItemIcon>
+            <ListItemText primary={'あああ'} />
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              未定
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <ListItemIcon>
+              <GitHubIcon />
+            </ListItemIcon>
+            <ListItemText primary={'いいい'} />
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              未定
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls='panel1a-content'
+            id='panel1a-header'
+          >
+            <ListItemIcon>
+              <GitHubIcon />
+            </ListItemIcon>
+            <ListItemText primary={'ううう'} />
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              未定
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
       </List>
     </>
   );

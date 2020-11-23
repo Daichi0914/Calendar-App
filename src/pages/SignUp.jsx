@@ -108,7 +108,7 @@ const SignUp = props => {
           }
         });
     } else {
-      window.alert('パスワードが一致しません。')
+      window.alert('パスワードが一致しません。');
     }
   };
 
@@ -145,10 +145,13 @@ const SignUp = props => {
             className={clsx(classes.margin, classes.textField)}
             variant='outlined'
           >
-            <InputLabel htmlFor='outlined-adornment-password'>パスワード</InputLabel>
+            <InputLabel htmlFor='outlined-adornment-password'>
+              パスワード(半角英数字6文字以上)
+            </InputLabel>
             <OutlinedInput
               id='outlined-adornment-password'
               type={passValues.showPassword ? 'text' : 'password'}
+              pattern='^([a-zA-Z0-9]{6,})$'
               value={passValues.password}
               onChange={handleChange('password')}
               endAdornment={
@@ -163,7 +166,7 @@ const SignUp = props => {
                   </IconButton>
                 </InputAdornment>
               }
-              labelWidth={83}
+              labelWidth={245}
             />
           </FormControl>
           <FormControl

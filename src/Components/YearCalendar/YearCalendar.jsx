@@ -73,13 +73,9 @@ const YearCalendar = () => {
     nowMonth,
   ]);
 
-  console.log(nowYear)
-  console.log(nowMonth)
-
   const month = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
   const { width } = useWindowDimensions();
-  console.log(width);
 
   return (
     <div
@@ -93,9 +89,10 @@ const YearCalendar = () => {
         cols={width > 900 ? 4 : width > 600 ? 3 : 2}
         rows={width > 900 ? 3 : width > 600 ? 4 : 5}
       >
-        {month.map(num => {
+        {month.map((num, i) => {
           return (
             <GridListTile
+              key={i}
               className={
                 width > 900
                   ? classes.gridTile

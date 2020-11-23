@@ -132,7 +132,7 @@ const YearCalendarMonth = ({ currentMonth }) => {
     <div className={classes.root}>
       <Typography className={classes.month}>{currentMonth + 1}月</Typography>
       <GridList cellHeight={'auto'} cols={7} style={{ width: '100%', marginBottom: 10 }}>
-        {weekdays.map(w => {
+        {weekdays.map((w, i) => {
           const styles = {};
           if (w === '日') {
             styles.color = 'red';
@@ -141,7 +141,7 @@ const YearCalendarMonth = ({ currentMonth }) => {
             styles.color = 'blue';
           }
           return (
-            <GridListTile>
+            <GridListTile key={i}>
               <div className={classes.dayGridListTile}>
                 <Typography style={styles}>{w}</Typography>
               </div>
