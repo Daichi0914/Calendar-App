@@ -1,22 +1,21 @@
-import React from 'react';
-import { useRecoilState } from 'recoil';
 import {
-  makeStyles,
-  IconButton,
-  Divider,
-  List,
-  ListItemText,
-  ListItemIcon,
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
+  Divider,
+  IconButton,
+  List,
+  ListItemIcon,
+  ListItemText,
+  makeStyles,
   Typography,
 } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import GitHubIcon from '@material-ui/icons/GitHub';
-
+import WbSunnyIcon from '@material-ui/icons/WbSunny';
+import React from 'react';
+import { useRecoilState } from 'recoil';
 import { MenuDrawerState } from '../../../Recoil/MenuDrawerState';
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const HeaderDrawer = () => {
+const HeaderDrawer = history => {
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useRecoilState(MenuDrawerState);
 
@@ -78,9 +77,7 @@ const HeaderDrawer = () => {
             <ListItemText primary={'あああ'} />
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
-              未定
-            </Typography>
+            <Typography>未定</Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion>
@@ -95,9 +92,7 @@ const HeaderDrawer = () => {
             <ListItemText primary={'いいい'} />
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
-              未定
-            </Typography>
+            <Typography>未定</Typography>
           </AccordionDetails>
         </Accordion>
         <Accordion>
@@ -112,9 +107,7 @@ const HeaderDrawer = () => {
             <ListItemText primary={'ううう'} />
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
-              未定
-            </Typography>
+            <Typography>未定</Typography>
           </AccordionDetails>
         </Accordion>
       </List>

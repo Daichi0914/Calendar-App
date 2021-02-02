@@ -34,7 +34,7 @@ const Main = () => {
 
   return (
     <div>
-      <Header />
+      <Header appKind={'Calender'} />
       <div style={{ height: 64 }} />
       <SubHeader style={{ position: 'fixed' }} />
       <div style={{ height: 60 }} />

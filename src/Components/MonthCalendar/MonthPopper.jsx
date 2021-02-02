@@ -1,13 +1,11 @@
-import React, { useState, useContext } from 'react';
+import { Button, DialogActions, makeStyles, Paper, Popper } from '@material-ui/core';
+import React, { useContext, useState } from 'react';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
-import { AuthContext } from '../../../AUTH/AuthService';
-import { makeStyles, Button, Popper, Paper, DialogActions } from '@material-ui/core';
-
-import { PopperToggle } from '../../../Recoil/PopperToggleState';
-import MonthPopperContents from './MonthPopperContents';
-import { Plans } from '../../../Recoil/PlansData';
-
-import { db } from '../../../utils/firebase';
+import { AuthContext } from '../../AUTH/AuthService';
+import { Plans } from '../../Recoil/PlansData';
+import { PopperToggle } from '../../Recoil/PopperToggleState';
+import { db } from '../../utils/firebase';
+import MonthPopperContents from './MonthAtoms/MonthPopperContents';
 
 const useStyles = makeStyles({
   paper: {
@@ -89,10 +87,10 @@ const MonthPopper = ({ popperId, anchorEl, day }) => {
         .add({
           event: {
             Key: key,
-            PlanName: plan.PlanName,
-            PlanStart: plan.PlanStart,
             PlanEnd: plan.PlanEnd,
             PlanMemo: plan.PlanMemo,
+            PlanName: plan.PlanName,
+            PlanStart: plan.PlanStart,
           },
         })
         .then(docRef => {

@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(2),
   },
   textField: {
-    width: '31.7ch',
+    width: '90%',
   },
 }));
 

@@ -1,27 +1,26 @@
-import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import clsx from 'clsx';
 import {
-  makeStyles,
   AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-  MenuItem,
-  Menu,
+  Button,
   Drawer,
+  IconButton,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-
-import UnitChangeButton from './HeaderAtoms/UnitChangeButton';
-import HeaderDrawer from './HeaderAtoms/HeaderDrawer';
-import { PopperToggle } from '../../Recoil/PopperToggleState';
-import { MenuDrawerState } from '../../Recoil/MenuDrawerState';
+import MenuIcon from '@material-ui/icons/Menu';
+import clsx from 'clsx';
+import React, { useState } from 'react';
+import { Link, withRouter } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { DrawerWidth } from '../../Recoil/DrawerWidth';
-
+import { MenuDrawerState } from '../../Recoil/MenuDrawerState';
+import { PopperToggle } from '../../Recoil/PopperToggleState';
 import { auth } from '../../utils/firebase';
+import HeaderDrawer from './HeaderAtoms/HeaderDrawer';
+import UnitChangeButton from './HeaderAtoms/UnitChangeButton';
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -67,10 +66,11 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.up('md')]: {
       display: 'flex',
     },
+    marginLeft: 30
   },
 }));
 
-const Header = () => {
+const Header = appKind => {
   const drawerWidth = useRecoilValue(DrawerWidth);
   const classes = useStyles(drawerWidth);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -116,7 +116,7 @@ const Header = () => {
       onClose={handleMenuClose}
     >
       {/* <MenuItem onClick={handleMenuClose}>アカウント</MenuItem> */}
-      <MenuItem onClick={() => signOutButton()}>サインアウト</MenuItem>
+      <MenuItem onClick={signOutButton}>サインアウト</MenuItem>
     </Menu>
   );
 
@@ -138,14 +138,37 @@ const Header = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant='h6' noWrap>
-            カレンダー
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.root}>
-            <UnitChangeButton />
-          </div>
-          <div className={classes.grow} />
+          {appKind.appKind === 'Calender' ? (
+            <>
+              <Typography className={classes.title} variant='h6' noWrap>
+                カレンダー
+              </Typography>
+              <div className={classes.grow} />
+              <div className={classes.root}>
+                <UnitChangeButton />
+              </div>
+              <div className={classes.grow} />
+              <Link to='/Constellation_Identification_App' style={{ textDecoration: 'none' }}>
+                <Button variant='contained'>
+                  <span>星座判別アプリへ</span>
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Typography className={classes.title} variant='h6' noWrap>
+                星座アプリ
+              </Typography>
+              <div className={classes.grow} />
+              <div className={classes.root}>
+                <Link to='/' style={{ textDecoration: 'none' }}>
+                  <Button variant='contained'>
+                    <span>カレンダーアプリへ戻る</span>
+                  </Button>
+                </Link>
+              </div>
+            </>
+          )}
           <div className={classes.sectionDesktop}>
             <IconButton
               edge='end'

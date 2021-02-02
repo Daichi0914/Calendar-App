@@ -1,29 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../AUTH/AuthService';
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { ClickAwayListener, GridList, GridListTile, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
+import React, { useContext, useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import OpenWeatherAPI from '../../API/OpenWeatherAPI';
+import { AuthContext } from '../../AUTH/AuthService';
 import {
-  NowYear,
-  NowMonth,
-  Today,
-  DayOfWeek,
-  CurrentYear,
   CurrentMonth,
+  CurrentYear,
+  DayOfWeek,
+  NowMonth,
+  NowYear,
+  Today,
 } from '../../Recoil/DateData';
-import { AnchorEl, PopperToggle } from '../../Recoil/PopperToggleState';
-import { OneWeekWeatherData } from '../../Recoil/OneWeekWeatherData';
-import { PlansData } from '../../Recoil/PlansData';
 import { DrawerWidth } from '../../Recoil/DrawerWidth';
 import { MenuDrawerState } from '../../Recoil/MenuDrawerState';
-
-import MonthCalendarGrid from './MonthAtoms/MonthCalendarGrid';
-import MonthPopper from './MonthAtoms/MonthPopper';
-
-import { makeStyles, GridList, GridListTile, ClickAwayListener } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-
-import OpenWeatherAPI from '../../API/OpenWeatherAPI';
+import { OneWeekWeatherData } from '../../Recoil/OneWeekWeatherData';
+import { PlansData } from '../../Recoil/PlansData';
+import { AnchorEl, PopperToggle } from '../../Recoil/PopperToggleState';
 import { db } from '../../utils/firebase';
+import MonthCalendarGrid from './MonthAtoms/MonthCalendarGrid';
+import MonthPopper from './MonthPopper';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -67,6 +63,11 @@ const useStyles = makeStyles(theme => ({
     '& > * + *': {
       marginTop: theme.spacing(1),
     },
+  },
+  planLabel: {
+    padding: 5,
+    backgroundColor: '#ddff9a',
+    borderRadius: 3,
   },
 }));
 
@@ -172,9 +173,9 @@ const MonthCalendar = () => {
         beforeMonthDay.getDate() < 10 ? '0' : ''
       }${beforeMonthDay.getDate()}`;
       const result = plansData
-        .map(e => e.event.Key)
+        .map(e => e.event)
         .filter(value => {
-          return value === beforeMonthDayId;
+          return value.Key === beforeMonthDayId;
         });
       calendar.push(
         <GridListTile
@@ -192,11 +193,15 @@ const MonthCalendar = () => {
           />
           <div className={classes.labels}>
             {result[0] ? (
-              <Alert severity='success' icon={false}>
-                {plansData.PlanName}
-              </Alert>
+              <div severity='success' className={classes.planLabel}>
+                {result[0].PlanName}
+              </div>
             ) : null}
-            {result[1] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result[1] ? (
+              <div severity='success' className={classes.planLabel}>
+                {result[1].PlanName}
+              </div>
+            ) : null}
             {result.length > 2 ? (
               <div
                 style={{ height: 10, margin: 0, fontSize: 10, textAlign: 'end' }}
@@ -241,9 +246,9 @@ const MonthCalendar = () => {
         day.getMonth() + 1
       }-${day.getDate() < 10 ? '0' : ''}${day.getDate()}`;
       const result = plansData
-        .map(e => e.event.Key)
+        .map(e => e.event)
         .filter(value => {
-          return value === dayId;
+          return value.Key === dayId;
         });
       calendar.push(
         <GridListTile
@@ -256,8 +261,16 @@ const MonthCalendar = () => {
         >
           <MonthCalendarGrid id={dayId} day={day} />
           <div className={classes.labels}>
-            {result[0] ? <Alert severity='success' icon={false}></Alert> : null}
-            {result[1] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result[0] ? (
+              <div severity='success' className={classes.planLabel}>
+                {result[0].PlanName}
+              </div>
+            ) : null}
+            {result[1] ? (
+              <div severity='success' className={classes.planLabel}>
+                {result[1].PlanName}
+              </div>
+            ) : null}
             {result.length > 2 ? (
               <div
                 style={{ height: 10, margin: 0, fontSize: 10, textAlign: 'end' }}
@@ -278,9 +291,9 @@ const MonthCalendar = () => {
         afterMonthDay.getDate() < 10 ? '0' : ''
       }${afterMonthDay.getDate()}`;
       const result = plansData
-        .map(e => e.event.Key)
+        .map(e => e.event)
         .filter(value => {
-          return value === afterMonthDayId;
+          return value.Key === afterMonthDayId;
         });
       calendar.push(
         <GridListTile
@@ -297,8 +310,16 @@ const MonthCalendar = () => {
             propsStyle={'#aaa'}
           />
           <div className={classes.labels}>
-            {result[0] ? <Alert severity='success' icon={false}></Alert> : null}
-            {result[1] ? <Alert severity='success' icon={false}></Alert> : null}
+            {result[0] ? (
+              <div severity='success' className={classes.planLabel}>
+                {result[0].PlanName}
+              </div>
+            ) : null}
+            {result[1] ? (
+              <div severity='success' className={classes.planLabel}>
+                {result[1].PlanName}
+              </div>
+            ) : null}
             {result.length > 2 ? (
               <div
                 style={{ height: 10, margin: 0, fontSize: 10, textAlign: 'end' }}

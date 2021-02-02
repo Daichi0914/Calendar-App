@@ -44,7 +44,7 @@ const UnitChangeButton = () => {
       aria-label='large outlined primary button group'
       style={{ backgroundColor: '#eee', margin: '14px 0' }}
     >
-      <Button
+      {/* <Button
         className={currentUnit === 'day' ? classes.current : null}
         onClick={handleDayClick}
       >
@@ -55,7 +55,7 @@ const UnitChangeButton = () => {
         onClick={handleWeekClick}
       >
         <span className={classes.span} />週<span className={classes.span} />
-      </Button>
+      </Button> */}
       <Button
         className={currentUnit === 'month' ? classes.current : null}
         onClick={handleMonthClick}
