@@ -1,9 +1,11 @@
 import exifr from 'exifr';
-import { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import Canvas from '../Components/ConstellationIdentificationApp/Canvas';
 import Header from '../Components/Header/Header';
+import { ImageURL } from '../Recoil/UpLoadImageURL';
 
 const ConstellationIdentification = () => {
-  const [fileUrl, setFileUrl] = useState(null);
+  const setFileUrl = useSetRecoilState(ImageURL);
   const handleChange = async ({
     target: {
       files: [file],
@@ -21,9 +23,8 @@ const ConstellationIdentification = () => {
       <div style={{ height: 64 }} />
       <input type='file' id='file' accept='image/*' onChange={handleChange} />
       <div style={{ height: 800 }}>
-        <img src={fileUrl} alt='upload' style={{ height: '100%' }} />
+        <Canvas />
       </div>
-      {/* <div>正座判別アプリ</div> */}
     </div>
   );
 };
