@@ -15,6 +15,8 @@
     "exifr": "^6.0.0",
     "firebase": "^8.0.2",
     "nanoid": "^3.1.16",
+    "node-loader": "^1.0.2",
+    "opencv4nodejs": "^5.6.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-dropzone": "^11.2.4",

@@ -1,11 +1,19 @@
 import exifr from 'exifr';
+import React, { useContext } from 'react';
+import { Redirect, withRouter } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
+import { AuthContext } from '../AUTH/AuthService';
 import Canvas from '../Components/ConstellationIdentificationApp/Canvas';
 import Header from '../Components/Header/Header';
 import { ImageURL } from '../Recoil/UpLoadImageURL';
 
 const ConstellationIdentification = () => {
+  const user = useContext(AuthContext);
   const setFileUrl = useSetRecoilState(ImageURL);
+
+  if (!user) {
+    return <Redirect to='/SignIn' />;
+  }
 
   const handleChange = async ({
     target: {
@@ -60,4 +68,4 @@ const ConstellationIdentification = () => {
   );
 };
 
-export default ConstellationIdentification;
+export default withRouter(ConstellationIdentification);

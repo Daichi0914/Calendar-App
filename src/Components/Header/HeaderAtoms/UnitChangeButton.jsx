@@ -24,12 +24,12 @@ const UnitChangeButton = () => {
   const [currentUnit, setCurrentUnit] = useRecoilState(Unit);
   const [open, setOpen] = useRecoilState(PopperToggle);
 
-  const handleDayClick = () => {
-    return open ? (setOpen(false), setCurrentUnit('day')) : setCurrentUnit('day');
-  };
-  const handleWeekClick = () => {
-    return open ? (setOpen(false), setCurrentUnit('week')) : setCurrentUnit('week');
-  };
+  // const handleDayClick = () => {
+  //   return open ? (setOpen(false), setCurrentUnit('day')) : setCurrentUnit('day');
+  // };
+  // const handleWeekClick = () => {
+  //   return open ? (setOpen(false), setCurrentUnit('week')) : setCurrentUnit('week');
+  // };
   const handleMonthClick = () => {
     return open ? (setOpen(false), setCurrentUnit('month')) : setCurrentUnit('month');
   };
