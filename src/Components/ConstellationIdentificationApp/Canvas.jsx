@@ -10,7 +10,7 @@ const Canvas = () => {
   const [isGetPixelData, setIsGetPixelData] = useState(null);
   const [pixelsData, setPixelsData] = useState(null);
   const [imgData, setImgData] = useState(null);
-  const [lightnessSortData, setLightnessSortData] = useState(null);
+  const [brightnessSortData, setBrightnessSortData] = useState(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -74,13 +74,15 @@ const Canvas = () => {
   };
 
   const sortLightness = () => {
-    const lightnessSort = pixelsData.sort((a, b) => {
+    const brightnessSort = pixelsData.sort((a, b) => {
       // [2]は輝度値を入れてある
       if (a[2] > b[2]) return -1;
       if (a[2] < b[2]) return 1;
       return 0;
     });
-    setLightnessSortData(lightnessSort);
+    setBrightnessSortData(brightnessSort);
+
+    // const 
   };
 
   // contextがスコープ外なのでここでCanvas処理は書けない
@@ -101,7 +103,7 @@ const Canvas = () => {
   };
   ///////////////////////////////////////////////////
 
-  console.log(lightnessSortData);
+  console.log(brightnessSortData);
 
   return (
     <>
