@@ -1,27 +1,24 @@
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import exifr from 'exifr';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { Redirect, withRouter } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { AuthContext } from '../AUTH/AuthService';
 import Canvas from '../Components/ConstellationIdentificationApp/Canvas';
+import ShowExifData from '../Components/ConstellationIdentificationApp/ShowExifData';
 import Header from '../Components/Header/Header';
 import { ImageURL } from '../Recoil/UpLoadImageURL';
 
-const ConstellationIdentification = () => {
+function ConstellationIdentification() {
   const user = useContext(AuthContext);
+  const [myFile, setMyFile] = useState(null);
   const setFileUrl = useSetRecoilState(ImageURL);
+  const resetFileUrl = useResetRecoilState(ImageURL);
 
-  if (!user) {
-    return <Redirect to='/SignIn' />;
-  }
-
-  const handleChange = async ({
-    target: {
-      files: [file],
-    },
-  }) => {
-    const output = await exifr.parse(file);
-    console.log(output);
+  const onDrop = async file => {
+    setMyFile(file[0]);
+    const output = await exifr.parse(file[0]);
 
     function Person(
       DateTimeOriginal,
@@ -52,20 +49,74 @@ const ConstellationIdentification = () => {
     );
     console.table(GPS_Info);
 
-    const imageUrl = URL.createObjectURL(file);
+    const imageUrl = URL.createObjectURL(file[0]);
     setFileUrl(imageUrl);
   };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+  });
+
+  const handleRemove = () => {
+    setMyFile(null);
+    resetFileUrl();
+    setFileUrl(null);
+  };
+
+  if (!user) {
+    return <Redirect to='/SignIn' />;
+  }
 
   return (
     <div style={{ margin: '10px 10px 0 10px' }}>
       <Header appKind={'Constellation'} />
       <div style={{ height: 64 }} />
-      <input type='file' id='file' accept='image/*' onChange={handleChange} />
-      <div>
-        <Canvas />
+      <div style={{ display: 'flex' }}>
+        <div style={{ width: '48vw' }}>
+          {myFile ? (
+            <>
+              <div style={{ marginBottom: 8 }}>
+                {myFile.path} - {myFile.size} bytes{' '}
+                <button onClick={handleRemove}>Remove File</button>
+              </div>
+              <div>
+                <Canvas />
+              </div>
+            </>
+          ) : (
+            <div
+              {...getRootProps({ className: 'dropzone' })}
+              style={{
+                width: '100%',
+                cursor: 'pointer',
+                border: 'dashed 2px #666',
+                borderRadius: 30,
+              }}
+            >
+              <input {...getInputProps()} type='file' id='file' accept='image/*' />
+              <p
+                style={{
+                  textAlign: 'center',
+                  fontSize: 20,
+                  color: '#666',
+                  margin: 40,
+                }}
+              >
+                Drag & drop some files here, or click to select files
+              </p>
+              <div style={{ textAlign: 'center' }}>
+                <CloudUploadIcon style={{ fontSize: 170, color: '#999', margin: 20 }} />
+              </div>
+            </div>
+          )}
+        </div>
+        <span style={{ width: '4vw' }} />
+        <div style={{ width: '48vw' }}>
+          <ShowExifData />
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default withRouter(ConstellationIdentification);

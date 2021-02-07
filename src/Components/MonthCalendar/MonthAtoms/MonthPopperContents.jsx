@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { DialogContent, Divider, makeStyles, TextField } from '@material-ui/core';
+import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { makeStyles, TextField, DialogContent, Divider } from '@material-ui/core';
 import { Plans } from '../../../Recoil/PlansData';
 
 const useStyles = makeStyles(theme => ({
