@@ -7,9 +7,6 @@ const Canvas = () => {
   const fileUrl = useRecoilValue(ImageURL);
   const [isIdentification, setIsIdentification] = useState(false);
   const [topBrightnessPixelData, setTopBrightnessPixelData] = useState(null);
-  // const [isBlur, setIsBlur] = useState(false);
-  // const [isGrayScale, setIsGrayScale] = useState(false);
-  // const [isGetPixelData, setIsGetPixelData] = useState(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -114,27 +111,6 @@ const Canvas = () => {
 
   console.log(topBrightnessPixelData);
 
-  // contextがスコープ外なのでここでCanvas処理は書けない
-  // const handleBlurClick = () => {
-  //   setIsBlur(!isBlur);
-  //   if (isGrayScale) {
-  //     setIsGrayScale(false);
-  //   }
-  //   if (isGetPixelData) {
-  //     setIsGetPixelData(false);
-  //   }
-  // };
-  // const handleGrayScaleClick = () => {
-  //   setIsGrayScale(!isGrayScale);
-  //   if (isGetPixelData) {
-  //     setIsGetPixelData(false);
-  //   }
-  // };
-  // const handleGetPxData = () => {
-  //   setIsGetPixelData(!isGetPixelData);
-  // };
-  ///////////////////////////////////////////////////
-
   // 星座判別(Blur/GrayScale/Sort/Filter)全部一度に起動
   const handleIdentification = () => {
     setIsIdentification(!isIdentification);
@@ -160,48 +136,6 @@ const Canvas = () => {
           </div>
         </div>
       ) : null}
-      {/* {fileUrl ? (
-        <div style={{ display: 'flex' }}>
-          ******************** Blur Button ********************
-          <button
-            onClick={handleBlurClick}
-            style={{ width: 120, padding: 5, fontSize: 15 }}
-          >
-            blur
-          </button>
-          <p style={{ padding: 5, fontSize: 15 }}>{isBlur ? ' : ON' : ' : OFF'}</p>
-
-          **************** Gray Scale Button ****************
-          {isBlur ? (
-            <>
-              <button
-                onClick={handleGrayScaleClick}
-                style={{ width: 120, padding: 5, fontSize: 15 }}
-              >
-                Gray Scale
-              </button>
-              <p style={{ padding: 5, fontSize: 15 }}>
-                {isGrayScale ? ' : ON' : ' : OFF'}
-              </p>
-            </>
-          ) : null}
-
-          ****************** Get Pixel Data *******************
-          {isGrayScale ? (
-            <>
-              <button
-                onClick={handleGetPxData}
-                style={{ width: 120, padding: 5, fontSize: 15 }}
-              >
-                Get Pixel Data
-              </button>
-              <p style={{ padding: 5, fontSize: 15 }}>
-                {isGetPixelData ? ' : ON' : ' : OFF'}
-              </p>
-            </>
-          ) : null}
-        </div>
-      ) : null} */}
     </>
   );
 };
