@@ -18,36 +18,41 @@ function ConstellationIdentification() {
 
   const onDrop = async file => {
     setMyFile(file[0]);
-    const output = await exifr.parse(file[0]);
 
-    function Person(
-      DateTimeOriginal,
-      GPSLatitude,
-      GPSLatitudeRef,
-      GPSLongitude,
-      GPSLongitudeRef,
-      GPSImgDirection,
-      GPSImgDirectionRef
-    ) {
-      this.撮影時刻 = DateTimeOriginal;
-      this.緯度 = GPSLatitude;
-      this.GPS緯度参照 = GPSLatitudeRef;
-      this.経度 = GPSLongitude;
-      this.GPS経度参照 = GPSLongitudeRef;
-      this.画像の向き = GPSImgDirection;
-      this.画像の経度参照 = GPSImgDirectionRef; // 'T'は真方位、'M'は磁気方位
-    }
+    // FIXME: EXIFが取れなくてもエラーにならないようにリファクタリングする必要がある
 
-    const GPS_Info = new Person(
-      output.DateTimeOriginal ? output.DateTimeOriginal : null,
-      output.GPSLatitude, // TODO: 60進法->10進法の変換が必要
-      output.GPSLatitudeRef,
-      output.GPSLongitude, // TODO: 60進法->10進法の変換が必要
-      output.GPSLongitudeRef,
-      output.GPSImgDirection,
-      output.GPSImgDirectionRef
-    );
-    console.table(GPS_Info);
+    // const output = await exifr.parse(file[0]);
+
+    // function Person(
+    //   DateTimeOriginal,
+    //   GPSLatitude,
+    //   GPSLatitudeRef,
+    //   GPSLongitude,
+    //   GPSLongitudeRef,
+    //   GPSImgDirection,
+    //   GPSImgDirectionRef
+    // ) {
+    //   this.撮影時刻 = DateTimeOriginal;
+    //   this.緯度 = GPSLatitude ? GPSLatitude : null;
+    //   this.GPS緯度参照 = GPSLatitudeRef ? GPSLatitudeRef : null;
+    //   this.経度 = GPSLongitude ? GPSLongitude : null;
+    //   this.GPS経度参照 = GPSLongitudeRef ? GPSLongitudeRef : null;
+    //   this.画像の向き = GPSImgDirection ? GPSImgDirection : null;
+    //   this.画像の経度参照 = GPSImgDirectionRef ? GPSImgDirectionRef : null; // 'T'は真方位、'M'は磁気方位
+    // }
+
+    // const GPS_Info = new Person(
+    //   output.DateTimeOriginal ? output.DateTimeOriginal : null,
+    //   output.GPSLatitude, // TODO: 60進法->10進法の変換が必要
+    //   output.GPSLatitudeRef,
+    //   output.GPSLongitude, // TODO: 60進法->10進法の変換が必要
+    //   output.GPSLongitudeRef,
+    //   output.GPSImgDirection,
+    //   output.GPSImgDirectionRef
+    // );
+    // console.table(GPS_Info);
+
+    //////////////////////////////////////////////////////////////////////////
 
     const imageUrl = URL.createObjectURL(file[0]);
     setFileUrl(imageUrl);
