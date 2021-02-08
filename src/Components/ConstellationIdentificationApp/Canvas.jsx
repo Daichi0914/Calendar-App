@@ -34,7 +34,7 @@ const Canvas = () => {
 
         // ↓↓ Gray Scale ↓↓ //
         const pixels = imgData.data;
-        const grayscale_threshold = 100;
+        const grayscale_threshold = 45;
 
         for (let i = 0; i < pixels.length; i += 4) {
           let brightness = parseInt(
@@ -72,7 +72,7 @@ const Canvas = () => {
         /////////////////////////////////////////
 
         const get_number_of_high_brightness = 10;
-        const pixel_range_threshold = 100;
+        const pixel_range_threshold = (1 / 40) * canvas.width;
         // brightnessSortを直接いじるのはまずいのでコピー
         let copyBrightnessSort = brightnessSort;
         let highBrightness = [];
