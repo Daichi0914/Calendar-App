@@ -126,18 +126,20 @@ function ConstellationIdentification() {
                 cursor: 'pointer',
                 border: 'dashed 2px #666',
                 borderRadius: 30,
+                paddingTop: 120,
+                paddingBottom: 100,
               }}
             >
               <input {...getInputProps()} type='file' id='file' accept='image/*' />
               <p
                 style={{
                   textAlign: 'center',
-                  fontSize: 20,
+                  fontSize: 30,
                   color: '#666',
                   margin: 40,
                 }}
               >
-                Drag & drop some files here, or click to select files
+                Drag & drop a file or click to select file here
               </p>
               <div style={{ textAlign: 'center' }}>
                 <CloudUploadIcon style={{ fontSize: 170, color: '#999', margin: 20 }} />
