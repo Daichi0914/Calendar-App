@@ -75,7 +75,7 @@ const ShowExifData = () => {
       <Table className={classes.table} aria-label='customized table'>
         <TableHead>
           <TableRow>
-            <StyledTableCell>取得情報</StyledTableCell>
+            <StyledTableCell>EXIFデータ項目</StyledTableCell>
             <StyledTableCell align='right'>取得結果</StyledTableCell>
           </TableRow>
         </TableHead>

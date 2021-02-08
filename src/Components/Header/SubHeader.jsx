@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: '#fff',
     position: 'fixed',
     right: 0,
+    zIndex: 100
   },
   appBar: {
     transition: theme.transitions.create(['margin', 'width'], {

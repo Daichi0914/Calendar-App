@@ -261,6 +261,7 @@ const MonthCalendar = () => {
         >
           <MonthCalendarGrid id={dayId} day={day} />
           <div className={classes.labels}>
+            {/* TODO: mapにできそう */}
             {result[0] ? (
               <div severity='success' className={classes.planLabel}>
                 {result[0].PlanName}
