@@ -11,7 +11,9 @@ import SubHeader from '../Components/Header/SubHeader';
 import MonthCalendar from '../Components/MonthCalendar/MonthCalendar';
 import WeekCalendar from '../Components/WeekCalendar/WeekCalendar';
 import YearCalendar from '../Components/YearCalendar/YearCalendar';
+import { IsInformation } from '../Recoil/IsInformation';
 import { Unit } from '../Recoil/UnitDisplay';
+
 const useStyles = makeStyles({
   root: {
     position: 'relative',
@@ -49,14 +51,20 @@ const Main = () => {
   const classes = useStyles();
   const user = useContext(AuthContext);
   const currentUnit = useRecoilValue(Unit);
-  const [isInfo, setIsInfo] = useState(false);
+  const isInformation = useRecoilValue(IsInformation);
+  const [isInfoAlert, setIsInfoAlert] = useState(false);
 
   useEffect(() => {
-    if (currentUnit === 'month') {
-      setIsInfo(true);
-      setTimeout(() => {
-        setIsInfo(false);
-      }, 6000);
+    if (isInformation) {
+      if (currentUnit === 'month') {
+        setIsInfoAlert(true);
+        setTimeout(() => {
+          setIsInfoAlert(false);
+        }, 6000);
+      }
+    }
+    return () => {
+      setIsInfoAlert(false)
     }
   }, []);
 
@@ -85,13 +93,13 @@ const Main = () => {
       <div style={{ height: 60 }} />
       {currentUnit === 'month' ? <div style={{ height: 30 }} /> : null}
       {currentUnitDisplay()}
-      <Alert severity='info' className={isInfo ? classes.alert : classes.alertNone}>
+      <Alert severity='info' className={isInfoAlert ? classes.alert : classes.alertNone}>
         <span style={{ display: 'flex', justifyContent: 'space-between' }}>
           <AlertTitle>Info</AlertTitle>
           <CloseIcon
             fontSize='small'
             className={classes.alertClose}
-            onClick={() => setIsInfo(false)}
+            onClick={() => setIsInfoAlert(false)}
           />
         </span>
         広告ブロッカーをONにしていると、天気が表示されない場合があります。
