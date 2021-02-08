@@ -8,6 +8,7 @@ const Canvas = () => {
   const [isIdentification, setIsIdentification] = useState(false);
   const [topBrightnessPixelData, setTopBrightnessPixelData] = useState(null);
 
+  // TODO: メモ化したい
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
@@ -65,13 +66,16 @@ const Canvas = () => {
           return 0;
         });
 
+        // 裏でblurして計算ができたら見た目は戻す //
+        context.filter = 'none';
+        drawImage();
+        /////////////////////////////////////////
+
         const get_number_of_high_brightness = 10;
         const pixel_range_threshold = 100;
         // brightnessSortを直接いじるのはまずいのでコピー
         let copyBrightnessSort = brightnessSort;
         let highBrightness = [];
-
-        console.log(copyBrightnessSort.length);
 
         for (
           let i = 0;
@@ -84,11 +88,11 @@ const Canvas = () => {
           context.arc(
             highestBrightnessPixel[0],
             highestBrightnessPixel[1],
-            7,
+            (2 / 1000) * canvas.width,
             0,
             2 * Math.PI
           );
-          context.lineWidth = 80;
+          context.lineWidth = (1 / 100) * canvas.width;
           context.strokeStyle = '#ff0000';
           context.stroke();
           highBrightness.push(highestBrightnessPixel);
@@ -103,7 +107,6 @@ const Canvas = () => {
               )
           );
         }
-        console.log(copyBrightnessSort.length);
         setTopBrightnessPixelData(highBrightness);
         // ↑↑ Get Pixel Data ↑↑ //
       } else {
