@@ -1,61 +1,86 @@
+import { makeStyles } from '@material-ui/core';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import clsx from 'clsx';
 import exifr from 'exifr';
 import React, { useContext, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Redirect, withRouter } from 'react-router-dom';
-import { useResetRecoilState, useSetRecoilState } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import { AuthContext } from '../AUTH/AuthService';
 import Canvas from '../Components/ConstellationIdentificationApp/Canvas';
 import ShowExifData from '../Components/ConstellationIdentificationApp/ShowExifData';
 import Header from '../Components/Header/Header';
+import { DrawerWidth } from '../Recoil/DrawerWidth';
+import { ExifData } from '../Recoil/ExifData';
+import { MenuDrawerState } from '../Recoil/MenuDrawerState';
 import { ImageURL } from '../Recoil/UpLoadImageURL';
+
+const useStyles = makeStyles(theme => ({
+  gridList: {
+    height: `calc(100vh - 210px)`,
+    padding: '40px 30px',
+  },
+  appBar: {
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth => drawerWidth,
+    transition: theme.transitions.create(['margin', 'width'], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  gridTile: {
+    maxWidth: 'calc((100vw - 80px) / 4)',
+    margin: '0 auto',
+  },
+  gridTileSm: {
+    margin: '0 auto',
+    maxWidth: 'calc((100vw - 80px) / 3)',
+  },
+  gridTileXs: {
+    margin: '0 auto',
+    maxWidth: 'calc((100vw - 80px) / 2)',
+  },
+}));
 
 function ConstellationIdentification() {
   const user = useContext(AuthContext);
+  const drawerWidth = useRecoilValue(DrawerWidth);
+  const drawerOpen = useRecoilValue(MenuDrawerState);
+  const classes = useStyles(drawerWidth);
   const [myFile, setMyFile] = useState(null);
-  const setFileUrl = useSetRecoilState(ImageURL);
+  const [fileUrl, setFileUrl] = useRecoilState(ImageURL);
   const resetFileUrl = useResetRecoilState(ImageURL);
+  const setExifData = useSetRecoilState(ExifData);
 
   const onDrop = async file => {
-    setMyFile(file[0]);
-
-    // FIXME: EXIFが取れなくてもエラーにならないようにリファクタリングする必要がある
-
-    // const output = await exifr.parse(file[0]);
-
-    // function Person(
-    //   DateTimeOriginal,
-    //   GPSLatitude,
-    //   GPSLatitudeRef,
-    //   GPSLongitude,
-    //   GPSLongitudeRef,
-    //   GPSImgDirection,
-    //   GPSImgDirectionRef
-    // ) {
-    //   this.撮影時刻 = DateTimeOriginal;
-    //   this.緯度 = GPSLatitude ? GPSLatitude : null;
-    //   this.GPS緯度参照 = GPSLatitudeRef ? GPSLatitudeRef : null;
-    //   this.経度 = GPSLongitude ? GPSLongitude : null;
-    //   this.GPS経度参照 = GPSLongitudeRef ? GPSLongitudeRef : null;
-    //   this.画像の向き = GPSImgDirection ? GPSImgDirection : null;
-    //   this.画像の経度参照 = GPSImgDirectionRef ? GPSImgDirectionRef : null; // 'T'は真方位、'M'は磁気方位
-    // }
-
-    // const GPS_Info = new Person(
-    //   output.DateTimeOriginal ? output.DateTimeOriginal : null,
-    //   output.GPSLatitude, // TODO: 60進法->10進法の変換が必要
-    //   output.GPSLatitudeRef,
-    //   output.GPSLongitude, // TODO: 60進法->10進法の変換が必要
-    //   output.GPSLongitudeRef,
-    //   output.GPSImgDirection,
-    //   output.GPSImgDirectionRef
-    // );
-    // console.table(GPS_Info);
-
-    //////////////////////////////////////////////////////////////////////////
+    const output = await exifr.parse(file[0]);
+    // DateTimeOriginalはオブジェクトで取得されるためstringに直して保存する必要がある
+    const exifDateTimeOriginal = JSON.stringify(output.DateTimeOriginal);
+    setExifData({
+      DateTimeOriginal: exifDateTimeOriginal ? exifDateTimeOriginal : null,
+      GPSLatitude: output.GPSLatitude ? output.GPSLatitude : null,
+      GPSLatitudeRef: output.GPSLatitudeRef ? output.GPSLatitudeRef : null,
+      GPSLongitude: output.GPSLongitude ? output.GPSLongitude : null,
+      GPSLongitudeRef: output.GPSLongitudeRef ? output.GPSLongitudeRef : null,
+      GPSImgDirection: output.GPSImgDirection ? output.GPSImgDirection : null,
+      GPSImgDirectionRef: output.GPSImgDirectionRef
+        ? output.GPSImgDirectionRef
+        : 'No Data',
+    });
 
     const imageUrl = URL.createObjectURL(file[0]);
     setFileUrl(imageUrl);
+    setMyFile(file[0]);
   };
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -76,8 +101,13 @@ function ConstellationIdentification() {
     <div style={{ margin: '10px 10px 0 10px' }}>
       <Header appKind={'Constellation'} />
       <div style={{ height: 64 }} />
-      <div style={{ display: 'flex' }}>
-        <div style={{ width: '48vw' }}>
+      <div
+        style={{ display: 'flex' }}
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: drawerOpen,
+        })}
+      >
+        <div style={{ width: '49vw', paddingLeft: 15 }}>
           {myFile ? (
             <>
               <div style={{ marginBottom: 8 }}>
@@ -115,9 +145,9 @@ function ConstellationIdentification() {
             </div>
           )}
         </div>
-        <span style={{ width: '4vw' }} />
-        <div style={{ width: '48vw' }}>
-          <ShowExifData />
+        <span style={{ width: '2vw' }} />
+        <div style={{ margin: '0 auto', maxWidth: '49vw', paddingTop: 30 }}>
+          {fileUrl ? <ShowExifData /> : null}
         </div>
       </div>
     </div>
