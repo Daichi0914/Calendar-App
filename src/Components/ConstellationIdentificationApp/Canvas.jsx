@@ -65,12 +65,20 @@ const Canvas = () => {
           return 0;
         });
 
-        const get_number_of_high_brightness = 5;
+        const get_number_of_high_brightness = 10;
         const pixel_range_threshold = 100;
-        let copyBrightnessSort = brightnessSort; // brightnessSortを直接いじるのはまずいのでコピー
+        // brightnessSortを直接いじるのはまずいのでコピー
+        let copyBrightnessSort = brightnessSort;
         let highBrightness = [];
 
-        for (let i = 0; i < get_number_of_high_brightness; i++) {
+        console.log(copyBrightnessSort.length);
+
+        for (
+          let i = 0;
+          // 最大でもget_number_of_high_brightnessより大きくならない＆足りなくてもundefinedにならない
+          i < copyBrightnessSort.length && i < get_number_of_high_brightness;
+          i++
+        ) {
           let highestBrightnessPixel = copyBrightnessSort[0];
           context.beginPath();
           context.arc(
@@ -95,6 +103,7 @@ const Canvas = () => {
               )
           );
         }
+        console.log(copyBrightnessSort.length);
         setTopBrightnessPixelData(highBrightness);
         // ↑↑ Get Pixel Data ↑↑ //
       } else {
