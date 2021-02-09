@@ -15,6 +15,11 @@ import { IsInformation } from '../Recoil/IsInformation';
 import { Unit } from '../Recoil/UnitDisplay';
 
 const useStyles = makeStyles({
+  '@global': {
+    '*::-webkit-scrollbar': {
+      display: 'none',
+    },
+  },
   root: {
     position: 'relative',
   },
@@ -64,8 +69,8 @@ const Main = () => {
       }
     }
     return () => {
-      setIsInfoAlert(false)
-    }
+      setIsInfoAlert(false);
+    };
   }, []);
 
   const currentUnitDisplay = () => {
