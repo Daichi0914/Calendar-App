@@ -73,9 +73,7 @@ function ConstellationIdentification() {
       GPSLongitude: output.GPSLongitude ? output.GPSLongitude : null,
       GPSLongitudeRef: output.GPSLongitudeRef ? output.GPSLongitudeRef : null,
       GPSImgDirection: output.GPSImgDirection ? output.GPSImgDirection : null,
-      GPSImgDirectionRef: output.GPSImgDirectionRef
-        ? output.GPSImgDirectionRef
-        : 'No Data',
+      GPSImgDirectionRef: output.GPSImgDirectionRef ? output.GPSImgDirectionRef : null,
     });
 
     const imageUrl = URL.createObjectURL(file[0]);
