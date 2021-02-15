@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   root: {
     position: 'relative',
   },
-  alert: {
+  info: {
     position: 'absolute',
     bottom: 50,
     left: 15,
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     transition: '1.5s',
     zIndex: 100,
   },
-  alertNone: {
+  infoNone: {
     position: 'absolute',
     bottom: 50,
     left: -550,
@@ -41,7 +41,7 @@ const useStyles = makeStyles({
     transition: '1s',
     zIndex: 100,
   },
-  alertClose: {
+  infoClose: {
     color: '#5398ff',
     borderRadius: 10,
     cursor: 'pointer',
@@ -56,20 +56,20 @@ const Main = () => {
   const classes = useStyles();
   const user = useContext(AuthContext);
   const currentUnit = useRecoilValue(Unit);
-  const isInformation = useRecoilValue(IsInformation);
-  const [isInfoAlert, setIsInfoAlert] = useState(false);
+  const turnOnInformation = useRecoilValue(IsInformation);
+  const [isInfo, setIsInfo] = useState(false);
 
   useEffect(() => {
-    if (isInformation) {
+    if (turnOnInformation) {
       if (currentUnit === 'month') {
-        setIsInfoAlert(true);
+        setIsInfo(true);
         setTimeout(() => {
-          setIsInfoAlert(false);
+          setIsInfo(false);
         }, 6000);
       }
     }
     return () => {
-      setIsInfoAlert(false);
+      setIsInfo(false);
     };
   }, []);
 
@@ -98,13 +98,13 @@ const Main = () => {
       <div style={{ height: 60 }} />
       {currentUnit === 'month' ? <div style={{ height: 30 }} /> : null}
       {currentUnitDisplay()}
-      <Alert severity='info' className={isInfoAlert ? classes.alert : classes.alertNone}>
+      <Alert severity='info' className={isInfo ? classes.info : classes.infoNone}>
         <span style={{ display: 'flex', justifyContent: 'space-between' }}>
           <AlertTitle>Info</AlertTitle>
           <CloseIcon
             fontSize='small'
-            className={classes.alertClose}
-            onClick={() => setIsInfoAlert(false)}
+            className={classes.infoClose}
+            onClick={() => setIsInfo(false)}
           />
         </span>
         広告ブロッカーをONにしていると、天気が表示されない場合があります。
